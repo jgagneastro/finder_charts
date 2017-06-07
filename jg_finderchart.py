@@ -230,6 +230,8 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
     
     rejtmass_ra = None
     rejtmass_de = None
+    rejtmass_ph = None
+    rejtmass_rel = None
     if rejtmass:
         if skipdownloads is not True:
             cmd4 = 'curl -o rejtmass.tbl "http://irsa.ipac.caltech.edu/TAP/sync?FORMAT=IPAC_TABLE&QUERY=SELECT+ra,dec,rel,ph_qual+FROM+pt_src_rej+WHERE+CONTAINS(POINT(\'J2000\',ra,dec),CIRCLE(\'J2000\','+str(ra)+','+str(de)+','+str(size/60.0)+'))=1"'
@@ -270,15 +272,22 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
         if images[i][1] == 'DSS2 IR':
             oplotfits(fig,'DSS2_IR.fits',nyplot,nxplot,5,ra,de,'DSS2 IR',year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius,size=size)
         
-        goodqual = None
+        #Initialize empty arrays
+        rejtmass_ra_sub = None
+        rejtmass_de_sub = None
+        rejtmass_rel_sub = None
         if images[i][1] == 'J':
             
             #If 2MASS-Reject sources are to be displayed, only display those detected in the appropriate band
+            
             if rejtmass:
                 qual = [t[0] for t in rejtmass_ph]
                 goodqual = np.where(np.array(qual) != 'U')
+                rejtmass_ra_sub = rejtmass_ra[goodqual]
+                rejtmass_de_sub = rejtmass_de[goodqual]
+                rejtmass_rel_sub = rejtmass_rel[goodqual]
             
-            oplotfits(fig,'2MASS_J.fits',nyplot,nxplot,6+tmass_spacing*nxplot,ra,de,'2MASS $J$',year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,rejtmass_ra=rejtmass_ra[goodqual],rejtmass_de=rejtmass_de[goodqual],circle_radius=circle_radius,size=size,rejtmass_rel=rejtmass_rel[goodqual])
+            oplotfits(fig,'2MASS_J.fits',nyplot,nxplot,6+tmass_spacing*nxplot,ra,de,'2MASS $J$',year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,rejtmass_ra=rejtmass_ra_sub,rejtmass_de=rejtmass_de_sub,circle_radius=circle_radius,size=size,rejtmass_rel=rejtmass_rel_sub)
         
         if images[i][1] == 'H':
             
@@ -286,8 +295,11 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
             if rejtmass:
                 qual = [t[1] for t in rejtmass_ph]
                 goodqual = np.where(np.array(qual) != 'U')
+                rejtmass_ra_sub = rejtmass_ra[goodqual]
+                rejtmass_de_sub = rejtmass_de[goodqual]
+                rejtmass_rel_sub = rejtmass_rel[goodqual]
 
-            oplotfits(fig,'2MASS_H.fits',nyplot,nxplot,7+tmass_spacing*nxplot,ra,de,'2MASS $H$',year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius,rejtmass_ra=rejtmass_ra[goodqual],rejtmass_de=rejtmass_de[goodqual],rejtmass_rel=rejtmass_rel[goodqual])
+            oplotfits(fig,'2MASS_H.fits',nyplot,nxplot,7+tmass_spacing*nxplot,ra,de,'2MASS $H$',year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius,rejtmass_ra=rejtmass_ra_sub,rejtmass_de=rejtmass_de_sub,rejtmass_rel=rejtmass_rel_sub)
         
         if images[i][1] == 'K':
             
@@ -295,8 +307,11 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
             if rejtmass:
                 qual = [t[2] for t in rejtmass_ph]
                 goodqual = np.where(np.array(qual) != 'U')
+                rejtmass_ra_sub = rejtmass_ra[goodqual]
+                rejtmass_de_sub = rejtmass_de[goodqual]
+                rejtmass_rel_sub = rejtmass_rel[goodqual]
 
-            oplotfits(fig,'2MASS_K.fits',nyplot,nxplot,8+tmass_spacing*nxplot,ra,de,'2MASS $K_S$',year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius,rejtmass_ra=rejtmass_ra[goodqual],rejtmass_de=rejtmass_de[goodqual],rejtmass_rel=rejtmass_rel[goodqual])
+            oplotfits(fig,'2MASS_K.fits',nyplot,nxplot,8+tmass_spacing*nxplot,ra,de,'2MASS $K_S$',year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius,rejtmass_ra=rejtmass_ra_sub,rejtmass_de=rejtmass_de_sub,rejtmass_rel=rejtmass_rel_sub)
         
         if images[i][1] == 'w1':
             wmin1, wmax1, im = oplotfits(fig,'AllWISE_w1.fits',nyplot,nxplot,6+allwise_spacing*nxplot,ra,de,'W1',year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius,size=size)
@@ -514,9 +529,8 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
             mins = []
             maxs = []
             for i in range(0,len(files)):
-                mini = (meds[i] - 2.0*mads[i])#/exptimes[i]*np.average(exptimes)
-                maxi = (meds[i] + 10.0*mads[i])#/exptimes[i]*np.average(exptimes)
-                #maxi = meds[i] + 5.0*devs[i]
+                mini = (meds[i] - 2.0*mads[i])
+                maxi = (meds[i] + 10.0*mads[i])
                 mins.append(mini)
                 maxs.append(maxi)
             
