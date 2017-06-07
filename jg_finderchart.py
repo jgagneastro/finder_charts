@@ -232,17 +232,19 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
     rejtmass_de = None
     if rejtmass:
         if skipdownloads is not True:
-            cmd4 = 'curl -o rejtmass.tbl "http://irsa.ipac.caltech.edu/TAP/sync?FORMAT=IPAC_TABLE&QUERY=SELECT+ra,dec,rel+FROM+pt_src_rej+WHERE+CONTAINS(POINT(\'J2000\',ra,dec),CIRCLE(\'J2000\','+str(ra)+','+str(de)+','+str(size/60.0)+'))=1"'
+            cmd4 = 'curl -o rejtmass.tbl "http://irsa.ipac.caltech.edu/TAP/sync?FORMAT=IPAC_TABLE&QUERY=SELECT+ra,dec,rel,ph_qual+FROM+pt_src_rej+WHERE+CONTAINS(POINT(\'J2000\',ra,dec),CIRCLE(\'J2000\','+str(ra)+','+str(de)+','+str(size/60.0)+'))=1"'
             #This is a temporary work-out, but only fetches rel='A' entries
             #cmd4 = 'wget -O rejtmass.tbl "http://irsa.ipac.caltech.edu/cgi-bin/Gator/nph-query?spatial=Box&size='+str(size*60.0)+'&radunits=arcsec&objstr='+str(ra)+','+str(de)+'&catalog=pt_src_rej&selcols=ra,dec&outfmt=1"'
             os.system(cmd4)
         try:
-            rejtmass_psc = np.loadtxt('rejtmass.tbl',skiprows=14,unpack=True,usecols=(0,1))
+            rejtmass_psc = np.loadtxt('rejtmass.tbl',skiprows=16,unpack=True,usecols=(0,1))
+            rejtmass_psc2 = np.loadtxt('rejtmass.tbl',skiprows=16,unpack=True,usecols=(2,3),dtype='str')
             rejtmass_ra,rejtmass_de = rejtmass_psc
+            rejtmass_rel,rejtmass_ph = rejtmass_psc2
         except:
             print "No 2MASS-Reject sources found!"
             rejtmass=False
-
+    
     if plot:
         pylab.ion()
     fig = pylab.figure(figsize=(fig_xsize,fig_ysize))
@@ -269,13 +271,31 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
             oplotfits(fig,'DSS2_IR.fits',nyplot,nxplot,5,ra,de,'DSS2 IR',year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius,size=size)
         
         if images[i][1] == 'J':
-            oplotfits(fig,'2MASS_J.fits',nyplot,nxplot,6+tmass_spacing*nxplot,ra,de,'2MASS $J$',year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,rejtmass_ra=rejtmass_ra,rejtmass_de=rejtmass_de,circle_radius=circle_radius,size=size)
+            
+            #If 2MASS-Reject sources are to be displayed, only display those detected in the appropriate band
+            if rejtmass:
+                qual = [t[0] for t in rejtmass_ph]
+                goodqual = np.where(np.array(qual) != 'U')
+            
+            oplotfits(fig,'2MASS_J.fits',nyplot,nxplot,6+tmass_spacing*nxplot,ra,de,'2MASS $J$',year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,rejtmass_ra=rejtmass_ra[goodqual],rejtmass_de=rejtmass_de[goodqual],circle_radius=circle_radius,size=size)
         
         if images[i][1] == 'H':
-            oplotfits(fig,'2MASS_H.fits',nyplot,nxplot,7+tmass_spacing*nxplot,ra,de,'2MASS $H$',year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius,rejtmass_ra=rejtmass_ra,rejtmass_de=rejtmass_de)
+            
+            #If 2MASS-Reject sources are to be displayed, only display those detected in the appropriate band
+            if rejtmass:
+                qual = [t[1] for t in rejtmass_ph]
+                goodqual = np.where(np.array(qual) != 'U')
+
+            oplotfits(fig,'2MASS_H.fits',nyplot,nxplot,7+tmass_spacing*nxplot,ra,de,'2MASS $H$',year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius,rejtmass_ra=rejtmass_ra[goodqual],rejtmass_de=rejtmass_de[goodqual])
         
         if images[i][1] == 'K':
-            oplotfits(fig,'2MASS_K.fits',nyplot,nxplot,8+tmass_spacing*nxplot,ra,de,'2MASS $K_S$',year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius,rejtmass_ra=rejtmass_ra,rejtmass_de=rejtmass_de)
+            
+            #If 2MASS-Reject sources are to be displayed, only display those detected in the appropriate band
+            if rejtmass:
+                qual = [t[2] for t in rejtmass_ph]
+                goodqual = np.where(np.array(qual) != 'U')
+
+            oplotfits(fig,'2MASS_K.fits',nyplot,nxplot,8+tmass_spacing*nxplot,ra,de,'2MASS $K_S$',year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius,rejtmass_ra=rejtmass_ra[goodqual],rejtmass_de=rejtmass_de[goodqual])
         
         if images[i][1] == 'w1':
             wmin1, wmax1, im = oplotfits(fig,'AllWISE_w1.fits',nyplot,nxplot,6+allwise_spacing*nxplot,ra,de,'W1',year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius,size=size)
@@ -646,7 +666,7 @@ def oplotfits(fig,fitsfile,nyplot,nxplot,position,ra,de,label,year='',xlabel=0.0
     if tmass:
         im.show_circles(tmass_ra,tmass_de,edgecolor=color_green,radius=0.0015,linewidth=1.5)
     if (rejtmass_ra is not None) and (rejtmass_de is not None):
-        im.show_circles(rejtmass_ra,rejtmass_de,edgecolor=color_green,radius=0.001,linewidth=0.5,alpha=0.8)
+        im.show_circles(rejtmass_ra,rejtmass_de,edgecolor=color_green,radius=0.001,linewidth=0.5,alpha=0.8,linestyle='--')
         #If possible, also display 2MASS main catalog sources if rejtmass is set
         if (not tmass) and (tmass_ra is not None) and (tmass_de is not None):
             im.show_circles(tmass_ra,tmass_de,edgecolor=color_green,radius=0.0015,linewidth=1.5,alpha=0.8)
