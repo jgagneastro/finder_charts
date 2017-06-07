@@ -277,7 +277,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
                 qual = [t[0] for t in rejtmass_ph]
                 goodqual = np.where(np.array(qual) != 'U')
             
-            oplotfits(fig,'2MASS_J.fits',nyplot,nxplot,6+tmass_spacing*nxplot,ra,de,'2MASS $J$',year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,rejtmass_ra=rejtmass_ra[goodqual],rejtmass_de=rejtmass_de[goodqual],circle_radius=circle_radius,size=size)
+            oplotfits(fig,'2MASS_J.fits',nyplot,nxplot,6+tmass_spacing*nxplot,ra,de,'2MASS $J$',year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,rejtmass_ra=rejtmass_ra[goodqual],rejtmass_de=rejtmass_de[goodqual],circle_radius=circle_radius,size=size,rejtmass_rel=rejtmass_rel[goodqual])
         
         if images[i][1] == 'H':
             
@@ -286,7 +286,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
                 qual = [t[1] for t in rejtmass_ph]
                 goodqual = np.where(np.array(qual) != 'U')
 
-            oplotfits(fig,'2MASS_H.fits',nyplot,nxplot,7+tmass_spacing*nxplot,ra,de,'2MASS $H$',year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius,rejtmass_ra=rejtmass_ra[goodqual],rejtmass_de=rejtmass_de[goodqual])
+            oplotfits(fig,'2MASS_H.fits',nyplot,nxplot,7+tmass_spacing*nxplot,ra,de,'2MASS $H$',year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius,rejtmass_ra=rejtmass_ra[goodqual],rejtmass_de=rejtmass_de[goodqual],rejtmass_rel=rejtmass_rel[goodqual])
         
         if images[i][1] == 'K':
             
@@ -295,7 +295,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
                 qual = [t[2] for t in rejtmass_ph]
                 goodqual = np.where(np.array(qual) != 'U')
 
-            oplotfits(fig,'2MASS_K.fits',nyplot,nxplot,8+tmass_spacing*nxplot,ra,de,'2MASS $K_S$',year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius,rejtmass_ra=rejtmass_ra[goodqual],rejtmass_de=rejtmass_de[goodqual])
+            oplotfits(fig,'2MASS_K.fits',nyplot,nxplot,8+tmass_spacing*nxplot,ra,de,'2MASS $K_S$',year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius,rejtmass_ra=rejtmass_ra[goodqual],rejtmass_de=rejtmass_de[goodqual],rejtmass_rel=rejtmass_rel[goodqual])
         
         if images[i][1] == 'w1':
             wmin1, wmax1, im = oplotfits(fig,'AllWISE_w1.fits',nyplot,nxplot,6+allwise_spacing*nxplot,ra,de,'W1',year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius,size=size)
@@ -625,9 +625,10 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
     tdiff = (t2 - t1)
     print "Finder creation took %s seconds" % (round(tdiff.total_seconds(),0))
 
-def oplotfits(fig,fitsfile,nyplot,nxplot,position,ra,de,label,year='',xlabel=0.05,ra2=None,de2=None,north=False,hdu=0,allwise=False,rejallwise=False,tmass=False,allcolor='#FFFF00',rejcolor='b',tm_color='r',secondary='',allwise_ra=None,allwise_de=None,rejallwise_ra=None,rejallwise_de=None,tmass_ra=None,tmass_de=None,rejtmass_ra=None,rejtmass_de=None,circle_radius=0.0025,size=2.0):
+#This function displays a fits image with the appropriate annotations
+def oplotfits(fig,fitsfile,nyplot,nxplot,position,ra,de,label,year='',xlabel=0.05,ra2=None,de2=None,north=False,hdu=0,allwise=False,rejallwise=False,tmass=False,allcolor='#FFFF00',rejcolor='b',tm_color='r',secondary='',allwise_ra=None,allwise_de=None,rejallwise_ra=None,rejallwise_de=None,tmass_ra=None,tmass_de=None,rejtmass_ra=None,rejtmass_de=None,circle_radius=0.0025,size=2.0,rejtmass_rel=None):
     
-    #circle_width = 0.7
+    #Circle parameters
     circle_width = 1.2
     circle_alpha = 0.8
 
@@ -637,37 +638,69 @@ def oplotfits(fig,fitsfile,nyplot,nxplot,position,ra,de,label,year='',xlabel=0.0
     color_purple = '#b27bba'#RGB=[178,123,186]
     color_green = '#4daf4a'#RGB = [77,175,74]
 
+    #Display FITS image
     im = aplpy.FITSFigure(fitsfile,figure=fig,subplot=(nyplot,nxplot,position),north=north,hdu=hdu)
+
+    #Hide ticks and labels
     im.hide_tick_labels()
     im.ticks.hide()
-    #im.ticks.set_color('k')
-    #im.ticks.set_minor_frequency(0)
-    #im.ticks.set_xspacing(0.5/60.0)
-    #im.ticks.set_yspacing(0.5/60.0)
     im.hide_xaxis_label()
     im.hide_yaxis_label()
+    
+    #Read the FITS data in order to determine appropriate scaling
     data1 = pyfits.getdata(fitsfile)
     med1 = np.nanmedian(data1)
     mad1 = np.nanmedian(abs(data1 - np.nanmedian(data1)))
     min1 = med1 - 2.0*mad1
     max1 = med1 + 10.0*mad1
+    
+    #Fix the scaling
     im.show_colorscale(cmap='gist_yarg',aspect='equal',vmax=max1,vmin=min1)
+    
+    #Recenter and zoom FITS image
     im.recenter(ra,de,width=(size/60.0),height=(size/60.0))
+    
+    #Display a circle at the input (RA,DEC) position
     im.show_circles(ra,de,edgecolor=color_red,linewidth=circle_width,facecolor='none',radius=circle_radius,alpha=circle_alpha)
+    
+    #Display a secondary circle if needed
     if secondary:
         im.show_circles(ra2,de2,edgecolor=color_blue,linewidth=circle_width,facecolor='none',radius=circle_radius,alpha=circle_alpha)
+    
+    #Add the plot label (usually, the name of the survey)
     im.add_label(xlabel,0.9,label,relative=True,size='medium',color='k',bbox=dict(facecolor='white', alpha=0.5),horizontalalignment='left')
+    
+    #Add year of image if specified
     if year:
         im.add_label(xlabel,0.1,year,relative=True,size='medium',color='k',bbox=dict(facecolor='white', alpha=0.5),horizontalalignment='left')
+    
+    #Add AllWISE source positions if specified
     if allwise:
         im.show_circles(allwise_ra,allwise_de,edgecolor='k',facecolor=allcolor,radius=0.0004,linewidth=0.5)
+    
+    #Add AllWISE-Reject source positions if specified
     if rejallwise:
         im.show_circles(rejallwise_ra,rejallwise_de,edgecolor='k',facecolor=rejcolor,radius=0.0004,linewidth=0.5)
+    
+    #Add 2MASS source positions if specified
     if tmass:
         im.show_circles(tmass_ra,tmass_de,edgecolor=color_green,radius=0.0015,linewidth=1.5)
+    
+    #Add 2MASS-Reject source positions if specified
     if (rejtmass_ra is not None) and (rejtmass_de is not None):
-        im.show_circles(rejtmass_ra,rejtmass_de,edgecolor=color_green,radius=0.001,linewidth=0.5,alpha=0.8,linestyle='--')
+        #If source reliabilities are specified, use dashed circles for reliability 'F'
+        if (rejtmass_rel is not None):
+            ind_F = np.where(rejtmass_rel == 'F')
+            ind_notF = np.where(rejtmass_rel != 'F')
+            if len(ind_F) != 0:
+                im.show_circles(rejtmass_ra[ind_F],rejtmass_de[ind_F],edgecolor=color_green,radius=0.001,linewidth=0.5,alpha=0.8,linestyle='--')
+            if len(ind_notF) != 0:
+                im.show_circles(rejtmass_ra[ind_notF],rejtmass_de[ind_notF],edgecolor=color_green,radius=0.001,linewidth=0.5,alpha=0.8)
+        #Otherwise just show regular circles for all 2MASS-Reject entries
+        else:
+            im.show_circles(rejtmass_ra,rejtmass_de,edgecolor=color_green,radius=0.001,linewidth=0.5,alpha=0.8)
         #If possible, also display 2MASS main catalog sources if rejtmass is set
         if (not tmass) and (tmass_ra is not None) and (tmass_de is not None):
             im.show_circles(tmass_ra,tmass_de,edgecolor=color_green,radius=0.0015,linewidth=1.5,alpha=0.8)
+    #Pass the scaling and plot reference ID
     return min1, max1, im
