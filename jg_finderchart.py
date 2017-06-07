@@ -17,7 +17,8 @@ import pdb
 def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False, \
     PSO=True,UKIDSS=True,VHS=True,keepfiles=False,allcolor='#FFFF00',rejcolor='b',tm_color='r', \
     plot=False,savepdf=True,secondary='',addtext='',addtext2='',skipdownloads=False, \
-    circle_radius=0.0025,size=3.0,override_directory=None):
+    circle_radius=0.0025,size=3.0,override_directory=None,primarypos_label=None, \
+    secondarypos_label=None):
     # Set $FINDER_PATH in your bash_profile if you would like to control where the finder charts are output
     # size: arcmin
     # allwise: overplot AllWISE catalog positions
@@ -264,14 +265,18 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
     
     for i in range(len(images)):
         if images[i][1] == 'DSS1 Blue':
-            oplotfits(fig,'DSS1_Blue.fits',nyplot,nxplot,1,ra,de,'DSS1 B',xlabel=0.2,\
+            min1, max1, im = oplotfits(fig,'DSS1_Blue.fits',nyplot,nxplot,1,ra,de,'DSS1 B',xlabel=0.2,\
                 year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,\
                 rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,\
                 tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,\
                 allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,\
                 tmass_ra=tmass_ra,tmass_de=tmass_de,rejtmass_ra=rejtmass_ra,\
                 rejtmass_de=rejtmass_de,circle_radius=circle_radius)
-            
+            if primarypos_label:
+                im.add_label(0.01,0.8,primarypos_label,relative=True,size='medium',color='r',horizontalalignment='left')
+            if secondary and secondarypos_label:
+                im.add_label(0.01,0.7,secondarypos_label,relative=True,size='medium',color='b',horizontalalignment='left')
+
         if images[i][1] == 'DSS1 Red':
             oplotfits(fig,'DSS1_Red.fits',nyplot,nxplot,2,ra,de,'DSS1 R',xlabel=0.2,\
                 year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,\
