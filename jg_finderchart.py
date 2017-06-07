@@ -647,7 +647,6 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
     #Create and plot RGB PSO image only if there's enough space (vertical_spacing >= 2)
     if PSO and vertical_spacing >= 2:
         try:
-            pdb.set_trace()
             files = ['y_PSO_TMP.fits','i_PSO_TMP.fits','g_PSO_TMP.fits']
             aplpy.make_rgb_cube(files,'PSO_rgb.fits')
             impsoc = aplpy.FITSFigure('PSO_rgb_2d.fits',figure=fig,subplot=(nyplot,nxplot,15))
