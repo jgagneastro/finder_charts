@@ -270,6 +270,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
         if images[i][1] == 'DSS2 IR':
             oplotfits(fig,'DSS2_IR.fits',nyplot,nxplot,5,ra,de,'DSS2 IR',year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius,size=size)
         
+        goodqual = None
         if images[i][1] == 'J':
             
             #If 2MASS-Reject sources are to be displayed, only display those detected in the appropriate band
@@ -476,19 +477,11 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
         mins.append(mini)
         maxs.append(maxi)
     
-    #aplpy.make_rgb_image('AllWISE_rgb.fits','AllWISE_rgb.png')
-    #aplpy.make_rgb_image('AllWISE_rgb.fits','AllWISE_rgb.png',vmin_r=mins[0],vmin_g=mins[1],vmin_b=mins[2])
-    
     aplpy.make_rgb_image('AllWISE_rgb.fits','AllWISE_rgb.png',vmin_r=mins[0],vmin_g=mins[1],vmin_b=mins[2],vmax_r=maxs[0],vmax_g=maxs[1],vmax_b=maxs[2])
     
     imawrgb.show_rgb('AllWISE_rgb.png')
     imawrgb.hide_tick_labels()
     imawrgb.ticks.hide()
-    #imawrgb.ticks.set_color('k')
-    #imawrgb.ticks.set_minor_frequency(0)
-    #imawrgb.ticks.set_xspacing(0.5/60.0)
-    #imawrgb.ticks.set_yspacing(0.5/60.0)
-    #imawrgb.hide_xaxis_label() 
     imawrgb.axis_labels.set_xtext('Size = '+str(size)+' arcmin')
     imawrgb.hide_yaxis_label()
     imawrgb.recenter(ra,de,width=(size/60.0),height=(size/60.0))
@@ -509,19 +502,14 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
             meds = []
             mads = []
             devs = []
-            #exptimes = []
             for filei in files:
                 datai = pyfits.getdata(filei)
                 medi = np.nanmedian(datai)
                 madi = np.nanmedian(abs(datai - np.nanmedian(datai)))
                 devi = np.percentile(datai,95) - np.percentile(datai,5)
-                #hdulist = pyfits.open(filei)
-                #exptimei = hdulist[0].header['EXPTIME']
-                #hdulist.close()
                 meds.append(medi)
                 mads.append(madi)
                 devs.append(devi)
-                #exptimes.append(exptimei)
             
             mins = []
             maxs = []
@@ -536,15 +524,9 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
             
             aplpy.make_rgb_image('PSO_rgb.fits','PSO_rgb.png')
             
-            #aplpy.make_rgb_image('PSO_rgb.fits','PSO_rgb.png',vmin_r=wminpsoy,vmin_g=wminpsoi,vmin_b=wminpsog,vmax_r=wmaxpsoy,vmax_g=wmaxpsoi,vmax_b=wmaxpsog)
-            
             impsoc.show_rgb('PSO_rgb.png')
             impsoc.hide_tick_labels()
             impsoc.ticks.hide()
-            #impsoc.ticks.set_color('k')
-            #impsoc.ticks.set_minor_frequency(0)
-            #impsoc.ticks.set_xspacing(0.5/60.0)
-            #impsoc.ticks.set_yspacing(0.5/60.0)
             impsoc.hide_xaxis_label()
             impsoc.hide_yaxis_label()
             impsoc.recenter(ra,de,width=(size/60.0),height=(size/60.0))
@@ -557,6 +539,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
     bottom_space = 0.05
     top_space = 0.05
     pylab.subplots_adjust(left=0.05,right=0.95,bottom=bottom_space,top=1.0-top_space,wspace=0.05,hspace=0.05)
+    
     # Add Labels
     ras = deg2str(ra)
     des = deg2str(de,dec=1)
