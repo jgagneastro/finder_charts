@@ -12,8 +12,6 @@ from query_pso_fits import *
 from jdcal import *
 import pdb
 import glob
-#python -c "from jg_finderchart import *; finder('135.0 0.0',keepfiles=True,skipdownloads=True,plot=False)"
-#python -c "from jg_finderchart import *; finder('314.03883 -25.365778',keepfiles=True,skipdownloads=True,plot=False)"
 
 def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False,PSO=True,UKIDSS=True,VHS=True,keepfiles=False,allcolor='#FFFF00',rejcolor='b',tm_color='r',plot=False,savepdf=True,secondary='',addtext='',addtext2='',skipdownloads=False,circle_radius=0.0025,size=3.0,override_directory=None,primarypos_label=None,secondarypos_label=None):
     # Set $FINDER_PATH in your bash_profile if you would like to control where the finder charts are output
@@ -538,7 +536,8 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
     sptext.annotate(r'$l$ = '+str(round(c2.l.degree,3)),xy=(xlabels,ytoplabels-ydeltalabels*2),fontsize=15)
     sptext.annotate(r'$b$ = '+str(round(c2.b.degree,3)),xy=(xlabels,ytoplabels-ydeltalabels*3),fontsize=15)
     if addtext:
-        sptext.annotate(addtext,xy=(xlabels,ytoplabels-ydeltalabels*4),fontsize=15)
+        for i, addtexti in enumerate(addtext):
+            sptext.annotate(addtexti,xy=(xlabels,ytoplabels-ydeltalabels*(4+i)),fontsize=15)
     if addtext2:
         sptext.annotate(addtext2,xy=(xlabels,ytoplabels-ydeltalabels*5),fontsize=14)
     if allwise:
