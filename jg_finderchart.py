@@ -153,6 +153,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
         VHS = None
     
     #If no PSO data could be downloaded, turn off the PSO option
+    pdb.set_trace()
     if glob.glob('*_PSO_TMP.fits*') is not True:
         PSO = None
     
@@ -563,7 +564,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
         pass
     else:
         print "Removing files..."
-        cmdrm1 = "rm source.xml 2MASS*.fits AllWISE*.fits DSS*.fits AllWISE_rgb.png *UKIDSS_TMP.fits.gz *VHS_TMP.fits.gz UKIDSS_rgb*.fits UKIDSS_rgb.png PSO_rgb.png PSO_rgb*.fits"
+        cmdrm1 = "rm source.xml 2MASS*.fits AllWISE*.fits DSS*.fits AllWISE_rgb.png *UKIDSS_TMP.fits.gz *VHS_TMP.fits.gz *PSO_TMP.fits* UKIDSS_rgb*.fits UKIDSS_rgb.png PSO_rgb.png PSO_rgb*.fits"
         os.system(cmdrm1)
         if allwise:
             cmdrm2 = "rm allwise.tbl"
