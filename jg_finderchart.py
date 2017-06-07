@@ -420,7 +420,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
     # Create and plot RGB AllWISE image
     files = ['AllWISE_w3.fits','AllWISE_w2.fits','AllWISE_w1.fits']
     aplpy.make_rgb_cube(files,'AllWISE_rgb.fits')
-    im20 = aplpy.FITSFigure('AllWISE_rgb_2d.fits',figure=fig,subplot=(nyplot,nxplot,10+allwise_spacing*nxplot))
+    imawrgb = aplpy.FITSFigure('AllWISE_rgb_2d.fits',figure=fig,subplot=(nyplot,nxplot,10+allwise_spacing*nxplot))
     meds = []
     mads = []
     devs = []
@@ -447,18 +447,19 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
     
     aplpy.make_rgb_image('AllWISE_rgb.fits','AllWISE_rgb.png',vmin_r=mins[0],vmin_g=mins[1],vmin_b=mins[2],vmax_r=maxs[0],vmax_g=maxs[1],vmax_b=maxs[2])
     
-    im20.show_rgb('AllWISE_rgb.png')
-    im20.hide_tick_labels()
-    im20.ticks.set_color('k')
-    im20.ticks.set_minor_frequency(0)
-    im20.ticks.set_xspacing(0.5/60.0)
-    im20.ticks.set_yspacing(0.5/60.0)
-    im20.hide_xaxis_label()
-    im20.hide_yaxis_label()
-    im20.recenter(ra,de,width=(2.0/60.0),height=(2.0/60.0))
-    im20.show_circles(ra,de,edgecolor='r',linewidth=0.7,facecolor='none',radius=circle_radius)
+    imawrgb.show_rgb('AllWISE_rgb.png')
+    imawrgb.axis('off')
+    #imawrgb.hide_tick_labels()
+    #imawrgb.ticks.set_color('k')
+    #imawrgb.ticks.set_minor_frequency(0)
+    #imawrgb.ticks.set_xspacing(0.5/60.0)
+    #imawrgb.ticks.set_yspacing(0.5/60.0)
+    #imawrgb.hide_xaxis_label()
+    #imawrgb.hide_yaxis_label()
+    imawrgb.recenter(ra,de,width=(2.0/60.0),height=(2.0/60.0))
+    imawrgb.show_circles(ra,de,edgecolor='r',linewidth=0.7,facecolor='none',radius=circle_radius)
     if secondary:
-        im20.show_circles(ra2,de2,edgecolor='b',linewidth=0.7,facecolor='none',radius=circle_radius)
+        imawrgb.show_circles(ra2,de2,edgecolor='b',linewidth=0.7,facecolor='none',radius=circle_radius)
     
     #Create and plot RGB PSO image only if there's enough space (vertical_spacing >= 2)
     if PSO and vertical_spacing >= 2:
