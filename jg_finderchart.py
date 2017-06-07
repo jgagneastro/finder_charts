@@ -245,10 +245,6 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
     for i in range(len(images)):
         if images[i][1] == 'DSS1 Blue':
             min1, max1, im = oplotfits(fig,'DSS1_Blue.fits',nyplot,nxplot,1,ra,de,'DSS1 B',xlabel=0.2,year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius)
-            if primarypos_label:
-                im.add_label(0.03,0.8,primarypos_label,relative=True,size='medium',color='r',horizontalalignment='left')
-            if secondary and secondarypos_label:
-                im.add_label(0.03,0.7,secondarypos_label,relative=True,size='medium',color='b',horizontalalignment='left')
 
         if images[i][1] == 'DSS1 Red':
             oplotfits(fig,'DSS1_Red.fits',nyplot,nxplot,2,ra,de,'DSS1 R',xlabel=0.2,year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius)
@@ -258,7 +254,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
     
         if images[i][1] == 'DSS2 Red':
             oplotfits(fig,'DSS2_Red.fits',nyplot,nxplot,4,ra,de,'DSS2 R',xlabel=0.2,year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius)
-            
+        
         if images[i][1] == 'DSS2 IR':
             oplotfits(fig,'DSS2_IR.fits',nyplot,nxplot,5,ra,de,'DSS2 IR',xlabel=0.2,year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius)
         
@@ -526,11 +522,13 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
     des = deg2str(de,dec=1)
     c1 = coord.ICRS(ra,de,unit=(u.degree,u.degree))
     c2 = c1.galactic    
+    
     sptext = fig.add_subplot(nyplot,nxplot,9+tmass_spacing*nxplot)
     sptext.axis('off')
     xlabels = .02
     ytoplabels = .89
     ydeltalabels = .12
+
     sptext.annotate(r'$\alpha$ = '+ras+'\t('+str(round(ra,6))+')',xy=(xlabels,ytoplabels),fontsize=15)
     sptext.annotate(r'$\delta$ = '+des+'\t('+str(round(de,6))+')',xy=(xlabels,ytoplabels-ydeltalabels),fontsize=15)
     sptext.annotate(r'$l$ = '+str(round(c2.l.degree,3)),xy=(xlabels,ytoplabels-ydeltalabels*2),fontsize=15)
@@ -552,6 +550,13 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
     if rejtmass:
         sptext.annotate('2MASS reject sources',xy=(xlabels+1e-3,ytoplabels-ydeltalabels*9-1e-3),fontsize=15,color='k')
         sptext.annotate('2MASS reject sources',xy=(xlabels,ytoplabels-ydeltalabels*9),fontsize=15,color=tm_color)
+    
+    sptext2 = fig.add_subplot(nyplot,nxplot,10+tmass_spacing*nxplot)
+    sptext2.axis('off')
+    if primarypos_label:
+        sptext2.annotate(primarypos_label,xy=(0.99,ytoplabels),fontsize=15,color='r',horizontalalignment='right')
+    if secondary and secondarypos_label:
+        sptext2.annotate(secondarypos_label,xy=(0.99,ytoplabels-ydeltalabels),fontsize=15,color='b',horizontalalignment='right')
     
     # Remove files (or not)
     if keepfiles:
