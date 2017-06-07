@@ -45,6 +45,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
     color_blue = '#377eb8'#RGB=[55,126,184]
     color_red = '#e41a1c'#RGB=[228,26,28]
     color_purple = '#b27bba'#RGB=[178,123,186]
+    color_green = '#4daf4a'#RGB = [77,175,74]
 
     nxplot = 5
     nyplot = 3
@@ -250,16 +251,16 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
     for i in range(len(images)):
         if images[i][1] == 'DSS1 Blue':
             min1, max1, im = oplotfits(fig,'DSS1_Blue.fits',nyplot,nxplot,1,ra,de,'DSS1 B',year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius)
-            if title:
-                im.show_xaxis_label()
-                im.axis_labels.set_xposition('top')
-                im.axis_labels.set_xtext(title)
 
         if images[i][1] == 'DSS1 Red':
             oplotfits(fig,'DSS1_Red.fits',nyplot,nxplot,2,ra,de,'DSS1 R',year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius)
     
         if images[i][1] == 'DSS2 Blue':
-            oplotfits(fig,'DSS2_Blue.fits',nyplot,nxplot,3,ra,de,'DSS2 B',year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius)
+            min1, max1, im = oplotfits(fig,'DSS2_Blue.fits',nyplot,nxplot,3,ra,de,'DSS2 B',year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius)
+            if title:
+                im.show_xaxis_label()
+                im.axis_labels.set_xposition('top')
+                im.axis_labels.set_xtext(title)
     
         if images[i][1] == 'DSS2 Red':
             oplotfits(fig,'DSS2_Red.fits',nyplot,nxplot,4,ra,de,'DSS2 R',year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius)
@@ -282,7 +283,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
             im.show_yaxis_label()
             im.axis_labels.set_xtext('RA (East left)')
             im.axis_labels.set_ytext('Dec (North up)')
-        
+
         if images[i][1] == 'w2':
             wmin2, wmax2, void = oplotfits(fig,'AllWISE_w2.fits',nyplot,nxplot,7+allwise_spacing*nxplot,ra,de,'W2',year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius)
         
@@ -471,9 +472,11 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
     imawrgb.axis_labels.set_xtext('Size = '+str(size)+' arcmin')
     imawrgb.hide_yaxis_label()
     imawrgb.recenter(ra,de,width=(2.0/60.0),height=(2.0/60.0))
-    imawrgb.show_circles(ra,de,edgecolor=color_red,linewidth=0.7,facecolor='none',radius=circle_radius)
+    circle_width = 1.2
+    circle_alpha = 0.8
+    imawrgb.show_circles(ra,de,edgecolor=color_red,linewidth=circle_width,facecolor='none',radius=circle_radius,alpha=circle_alpha)
     if secondary:
-        imawrgb.show_circles(ra2,de2,edgecolor=color_blue,linewidth=0.7,facecolor='none',radius=circle_radius)
+        imawrgb.show_circles(ra2,de2,edgecolor=color_blue,linewidth=circle_width,facecolor='none',radius=circle_radius,alpha=circle_alpha)
     
     #Create and plot RGB PSO image only if there's enough space (vertical_spacing >= 2)
     if PSO and vertical_spacing >= 2:
@@ -525,9 +528,9 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
             impsoc.hide_xaxis_label()
             impsoc.hide_yaxis_label()
             impsoc.recenter(ra,de,width=(2.0/60.0),height=(2.0/60.0))
-            impsoc.show_circles(ra,de,edgecolor=color_red,linewidth=0.7,facecolor='none',radius=circle_radius)
+            impsoc.show_circles(ra,de,edgecolor=color_red,linewidth=circle_width,facecolor='none',radius=circle_radius,alpha=circle_alpha)
             if secondary:
-                impsoc.show_circles(ra2,de2,edgecolor=color_blue,linewidth=0.7,facecolor='none',    radius=circle_radius)
+                impsoc.show_circles(ra2,de2,edgecolor=color_blue,linewidth=circle_width,facecolor='none',    radius=circle_radius,alpha=circle_alpha)
         except:
             pass
     
@@ -604,10 +607,15 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
 
 def oplotfits(fig,fitsfile,nyplot,nxplot,position,ra,de,label,year='',xlabel=0.05,ra2=None,de2=None,north=False,hdu=0,allwise=False,rejallwise=False,tmass=False,allcolor='#FFFF00',rejcolor='b',tm_color='r',secondary='',allwise_ra=None,allwise_de=None,rejallwise_ra=None,rejallwise_de=None,tmass_ra=None,tmass_de=None,rejtmass_ra=None,rejtmass_de=None,circle_radius=0.0025):
     
+    #circle_width = 0.7
+    circle_width = 1.2
+    circle_alpha = 0.8
+
     #List of colors
     color_blue = '#377eb8'#RGB=[55,126,184]
     color_red = '#e41a1c'#RGB=[228,26,28]
     color_purple = '#b27bba'#RGB=[178,123,186]
+    color_green = '#4daf4a'#RGB = [77,175,74]
 
     im = aplpy.FITSFigure(fitsfile,figure=fig,subplot=(nyplot,nxplot,position),north=north,hdu=hdu)
     im.hide_tick_labels()
@@ -625,9 +633,9 @@ def oplotfits(fig,fitsfile,nyplot,nxplot,position,ra,de,label,year='',xlabel=0.0
     max1 = med1 + 10.0*mad1
     im.show_colorscale(cmap='gist_yarg',aspect='equal',vmax=max1,vmin=min1)
     im.recenter(ra,de,width=(2.0/60.0),height=(2.0/60.0))
-    im.show_circles(ra,de,edgecolor=color_red,linewidth=0.7,facecolor='none',radius=circle_radius)
+    im.show_circles(ra,de,edgecolor=color_red,linewidth=circle_width,facecolor='none',radius=circle_radius,alpha=circle_alpha)
     if secondary:
-        im.show_circles(ra2,de2,edgecolor=color_blue,linewidth=0.7,facecolor='none',radius=circle_radius)
+        im.show_circles(ra2,de2,edgecolor=color_blue,linewidth=circle_width,facecolor='none',radius=circle_radius,alpha=circle_alpha)
     im.add_label(xlabel,0.9,label,relative=True,size='medium',color='k',bbox=dict(facecolor='white', alpha=0.5),horizontalalignment='left')
     if year:
         im.add_label(xlabel,0.1,year,relative=True,size='medium',color='k',bbox=dict(facecolor='white', alpha=0.5),horizontalalignment='left')
@@ -636,10 +644,10 @@ def oplotfits(fig,fitsfile,nyplot,nxplot,position,ra,de,label,year='',xlabel=0.0
     if rejallwise:
         im.show_circles(rejallwise_ra,rejallwise_de,edgecolor='k',facecolor=rejcolor,radius=0.0004,linewidth=0.5)
     if tmass:
-        im.show_circles(tmass_ra,tmass_de,edgecolor=color_purple,radius=0.0015,linewidth=1.5)
+        im.show_circles(tmass_ra,tmass_de,edgecolor=color_green,radius=0.0015,linewidth=1.5)
     if (rejtmass_ra is not None) and (rejtmass_de is not None):
-        im.show_circles(rejtmass_ra,rejtmass_de,edgecolor=color_purple,radius=0.001,linewidth=0.5,alpha=0.8)
+        im.show_circles(rejtmass_ra,rejtmass_de,edgecolor=color_green,radius=0.001,linewidth=0.5,alpha=0.8)
         #If possible, also display 2MASS main catalog sources if rejtmass is set
         if (not tmass) and (tmass_ra is not None) and (tmass_de is not None):
-            im.show_circles(tmass_ra,tmass_de,edgecolor=color_purple,radius=0.0015,linewidth=1.5,alpha=0.8)
+            im.show_circles(tmass_ra,tmass_de,edgecolor=color_green,radius=0.0015,linewidth=1.5,alpha=0.8)
     return min1, max1, im
