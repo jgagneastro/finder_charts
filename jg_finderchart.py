@@ -145,15 +145,15 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
             query_pso_fits(ra,de,size=size,output_file='PSO_TMP.fits')
     
     #If no UKIDSS data could be downloaded, turn off the UKIDSS option
-    if glob.glob('*_UKIDSS_TMP.fits*') is None:
+    if len(glob.glob('*_UKIDSS_TMP.fits*')) == 0:
         UKIDSS = None
     
     #If no VHS data could be downloaded, turn off the VHS option
-    if glob.glob('*_VHS_TMP.fits*') is None:
+    if len(glob.glob('*_VHS_TMP.fits*')) == 0:
         VHS = None
     
     #If no PSO data could be downloaded, turn off the PSO option
-    if glob.glob('*_PSO_TMP.fits*') is None:
+    if len(glob.glob('*_PSO_TMP.fits*')) == 0:
         PSO = None
     
     #Determine the amount of additional rows needed
