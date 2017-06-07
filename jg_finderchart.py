@@ -752,7 +752,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
     
     # Remove files (or not)
     if keepfiles:
-        j = 1
+        pass
     else:
         print "Removing files..."
         cmdrm1 = "rm source.xml 2MASS*.fits AllWISE*.fits DSS*.fits "+\
