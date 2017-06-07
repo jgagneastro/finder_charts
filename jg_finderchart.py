@@ -223,7 +223,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
     
     rejtmass_ra = None
     rejtmass_de = None
-    pdb.set_trace()
+    #pdb.set_trace()
     if rejtmass:
         cmd4 = 'curl -o rejtmass.tbl "http://irsa.ipac.caltech.edu/TAP/sync?FORMAT=IPAC_TABLE&QUERY=SELECT+ra,dec,rel+FROM+pt_src_rej+WHERE+CONTAINS(POINT(\'J2000\',ra,dec),CIRCLE(\'J2000\','+str(ra)+','+str(de)+','+str(size/60.0)+'))=1"'
         #This is a temporary work-out, but only fetches rel='A' entries
@@ -556,7 +556,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
         pass
     else:
         print "Removing files..."
-        cmdrm1 = "rm source.xml 2MASS*.fits AllWISE*.fits DSS*.fits "+,        "AllWISE_rgb.png *UKIDSS_TMP.fits.gz *VHS_TMP.fits.gz UKIDSS_rgb*.fits UKIDSS_rgb.png PSO_rgb.png PSO_rgb*.fits"
+        cmdrm1 = "rm source.xml 2MASS*.fits AllWISE*.fits DSS*.fits AllWISE_rgb.png *UKIDSS_TMP.fits.gz *VHS_TMP.fits.gz UKIDSS_rgb*.fits UKIDSS_rgb.png PSO_rgb.png PSO_rgb*.fits"
         os.system(cmdrm1)
         if allwise:
             cmdrm2 = "rm allwise.tbl"
@@ -578,9 +578,9 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
     tdiff = (t2 - t1)
     print "Finder creation took %s seconds" % (round(tdiff.total_seconds(),0))
 
-def oplotfits(fig,fitsfile,nyplot,nxplot,position,ra,de,label,year='',xlabel=0.1,ra2=None,de2=None,north=False,hdu=0,allwise=False,rejallwise=False,tmass=False,,rejtmass=False,allcolor='#FFFF00',rejcolor='b',tm_color='r',secondary='',,allwise_ra=None,allwise_de=None,rejallwise_ra=None,rejallwise_de=None,,tmass_ra=None,tmass_de=None,rejtmass_ra=None,rejtmass_de=None,circle_radius=0.0025):
+def oplotfits(fig,fitsfile,nyplot,nxplot,position,ra,de,label,year='',xlabel=0.1,ra2=None,de2=None,north=False,hdu=0,allwise=False,rejallwise=False,tmass=False,rejtmass=False,allcolor='#FFFF00',rejcolor='b',tm_color='r',secondary='',allwise_ra=None,allwise_de=None,rejallwise_ra=None,rejallwise_de=None,tmass_ra=None,tmass_de=None,rejtmass_ra=None,rejtmass_de=None,circle_radius=0.0025):
     
-    im = aplpy.FITSFigure(fitsfile,figure=fig,subplot=(nyplot,nxplot,position),,    north=north,hdu=hdu)
+    im = aplpy.FITSFigure(fitsfile,figure=fig,subplot=(nyplot,nxplot,position),north=north,hdu=hdu)
     im.hide_tick_labels()
     im.ticks.set_color('k')
     im.ticks.set_minor_frequency(0)
