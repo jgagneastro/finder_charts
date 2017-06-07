@@ -530,13 +530,13 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
             maxs = []
             for i in range(0,len(files)):
                 mini = (meds[i] - 2.0*mads[i])
-                maxi = (meds[i] + 10.0*mads[i])
+                #maxi = (meds[i] + 10.0*mads[i])
+                maxi = meds[i] + 2.0*devs[i]
                 mins.append(mini)
                 maxs.append(maxi)
             
-            #aplpy.make_rgb_image('PSO_rgb.fits','PSO_rgb.png',vmin_r=mins[0],vmin_g=mins[1],vmin_b=mins[2],vmax_r=maxs[0],vmax_g=maxs[1],vmax_b=maxs[2])
-            
-            aplpy.make_rgb_image('PSO_rgb.fits','PSO_rgb.png')
+            aplpy.make_rgb_image('PSO_rgb.fits','PSO_rgb.png',vmin_r=mins[0],vmin_g=mins[1],vmin_b=mins[2],vmax_r=maxs[0],vmax_g=maxs[1],vmax_b=maxs[2])
+            #aplpy.make_rgb_image('PSO_rgb.fits','PSO_rgb.png')
             
             impsoc.show_rgb('PSO_rgb.png')
             impsoc.hide_tick_labels()
