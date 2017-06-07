@@ -512,7 +512,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
             files = ['y_PSO_TMP.fits','i_PSO_TMP.fits','g_PSO_TMP.fits']
             aplpy.make_rgb_cube(files,'PSO_rgb.fits')
             impsoc = aplpy.FITSFigure('PSO_rgb_2d.fits',figure=fig,subplot=(nyplot,nxplot,15))
-            impsoc.add_label(0.05,0.9,'$y$/$i$/$g$',relative=True,size='medium',color='k',bbox=dict(facecolor='white', alpha=0.5),horizontalalignment='left')
+            impsoc.add_label(0.05,0.9,'PSO $y$/$i$/$g$',relative=True,size='medium',color='k',bbox=dict(facecolor='white', alpha=0.5),horizontalalignment='left')
 
             meds = []
             mads = []
@@ -687,11 +687,12 @@ def oplotfits(fig,fitsfile,nyplot,nxplot,position,ra,de,label,year='',xlabel=0.0
     if (rejtmass_ra is not None) and (rejtmass_de is not None):
         #If source reliabilities are specified, use dashed circles for reliability 'F'
         if (rejtmass_rel is not None):
+            #pdb.set_trace()
             ind_F = np.where(rejtmass_rel == 'F')
             ind_notF = np.where(rejtmass_rel != 'F')
-            if len(ind_F) != 0:
+            if len(ind_F[0]) != 0:
                 im.show_circles(rejtmass_ra[ind_F],rejtmass_de[ind_F],edgecolor=color_green,radius=0.001,linewidth=0.5,alpha=0.8,linestyle='--')
-            if len(ind_notF) != 0:
+            if len(ind_notF[0]) != 0:
                 im.show_circles(rejtmass_ra[ind_notF],rejtmass_de[ind_notF],edgecolor=color_green,radius=0.001,linewidth=0.5,alpha=0.8)
         #Otherwise just show regular circles for all 2MASS-Reject entries
         else:
