@@ -13,7 +13,7 @@ from jdcal import *
 import pdb
 import glob
 
-def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False,PSO=True,UKIDSS=True,VHS=True,keepfiles=False,allcolor='#FFFF00',rejcolor='b',tm_color='r',plot=False,savepdf=True,secondary='',addtext='',addtext2='',skipdownloads=False,circle_radius=0.0025,size=3.0,override_directory=None,primarypos_label=None,secondarypos_label=None):
+def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False,PSO=True,UKIDSS=True,VHS=True,keepfiles=False,allcolor='#FFFF00',rejcolor='b',tm_color='r',plot=False,savepdf=True,secondary='',addtext='',addtext2='',skipdownloads=False,circle_radius=0.0025,size=3.0,override_directory=None,primarypos_label=None,secondarypos_label=None,title=None):
     # Set $FINDER_PATH in your bash_profile if you would like to control where the finder charts are output
     # size: arcmin
     # allwise: overplot AllWISE catalog positions
@@ -250,6 +250,10 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
     for i in range(len(images)):
         if images[i][1] == 'DSS1 Blue':
             min1, max1, im = oplotfits(fig,'DSS1_Blue.fits',nyplot,nxplot,1,ra,de,'DSS1 B',year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius)
+            if title:
+                im.show_xaxis_label()
+                im.axis_labels.set_xposition('top')
+                im.axis_labels.set_xtext(title)
 
         if images[i][1] == 'DSS1 Red':
             oplotfits(fig,'DSS1_Red.fits',nyplot,nxplot,2,ra,de,'DSS1 R',year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius)
@@ -278,7 +282,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
             im.show_yaxis_label()
             im.axis_labels.set_xtext('RA (East left)')
             im.axis_labels.set_ytext('Dec (North up)')
-            
+        
         if images[i][1] == 'w2':
             wmin2, wmax2, void = oplotfits(fig,'AllWISE_w2.fits',nyplot,nxplot,7+allwise_spacing*nxplot,ra,de,'W2',year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius)
         
@@ -428,6 +432,8 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
     files = ['AllWISE_w3.fits','AllWISE_w2.fits','AllWISE_w1.fits']
     aplpy.make_rgb_cube(files,'AllWISE_rgb.fits')
     imawrgb = aplpy.FITSFigure('AllWISE_rgb_2d.fits',figure=fig,subplot=(nyplot,nxplot,10+allwise_spacing*nxplot))
+    imawrgb.add_label(0.05,0.9,'W3/W2/W1',relative=True,size='medium',color='k',bbox=dict(facecolor='white', alpha=0.5),horizontalalignment='left')
+
     meds = []
     mads = []
     devs = []
@@ -475,7 +481,8 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
             files = ['y_PSO_TMP.fits','i_PSO_TMP.fits','g_PSO_TMP.fits']
             aplpy.make_rgb_cube(files,'PSO_rgb.fits')
             impsoc = aplpy.FITSFigure('PSO_rgb_2d.fits',figure=fig,subplot=(nyplot,nxplot,15))
-            
+            impsoc.add_label(0.05,0.9,'$y$/$i$/$g$',relative=True,size='medium',color='k',bbox=dict(facecolor='white', alpha=0.5),horizontalalignment='left')
+
             meds = []
             mads = []
             devs = []
