@@ -246,10 +246,9 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
     
     rejtmass_ra = None
     rejtmass_de = None
+    pdb.set_trace()
     if rejtmass:
-        cmd4 = 'wget -O rejtmass.tbl "http://irsa.ipac.caltech.edu/cgi-bin/Gator/nph-query?'+\
-            'spatial=Box&size=120.0&radunits=arcsec&objstr='+\
-            str(ra)+','+str(de)+'&catalog=pt_src_rej&selcols=ra,dec&outfmt=1"'
+        cmd4 = 'curl -o rejtmass.tbl "http://irsa.ipac.caltech.edu/TAP/sync?FORMAT=IPAC_TABLE&QUERY=SELECT+ra,dec,rel+FROM+pt_src_rej+WHERE+CONTAINS(POINT(\'J2000\',ra,dec),CIRCLE(\'J2000\','+str(ra)+','+str(de)+','+str(size/60.0)+'))=1"'
         os.system(cmd4)
         try:
             rejtmass_psc = np.loadtxt('rejtmass.tbl',skiprows=37,unpack=True,usecols=(0,1))
