@@ -11,14 +11,11 @@ from query_wsa_fits import *
 from query_pso_fits import *
 from jdcal import *
 import pdb
+import glob
 #python -c "from jg_finderchart import *; finder('135.0 0.0',keepfiles=True,skipdownloads=True,plot=False)"
 #python -c "from jg_finderchart import *; finder('314.03883 -25.365778',keepfiles=True,skipdownloads=True,plot=False)"
 
-def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False, \
-    PSO=True,UKIDSS=True,VHS=True,keepfiles=False,allcolor='#FFFF00',rejcolor='b',tm_color='r', \
-    plot=False,savepdf=True,secondary='',addtext='',addtext2='',skipdownloads=False, \
-    circle_radius=0.0025,size=3.0,override_directory=None,primarypos_label=None, \
-    secondarypos_label=None):
+def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False,PSO=True,UKIDSS=True,VHS=True,keepfiles=False,allcolor='#FFFF00',rejcolor='b',tm_color='r',plot=False,savepdf=True,secondary='',addtext='',addtext2='',skipdownloads=False,circle_radius=0.0025,size=3.0,override_directory=None,primarypos_label=None,secondarypos_label=None):
     # Set $FINDER_PATH in your bash_profile if you would like to control where the finder charts are output
     # size: arcmin
     # allwise: overplot AllWISE catalog positions
@@ -63,9 +60,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
     xmlfile = "source.xml"
     if skipdownloads is not True:
         print "Getting xml file..."
-        cmd = "wget -O "+xmlfile+\
-            " 'http://irsa.ipac.caltech.edu/applications/finderchart/servlet/api?locstr="+\
-            str(ra)+"+"+str(de)+"&subsetsize="+str(size)+"' "
+        cmd = "wget -O "+xmlfile+" 'http://irsa.ipac.caltech.edu/applications/finderchart/servlet/api?locstr="+str(ra)+"+"+str(de)+"&subsetsize="+str(size)+"' "
         os.system(cmd)
     
     # parse xml file
@@ -137,15 +132,13 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
             print "Downloading UKIDSS data"
             #Remove previous data
             os.system("rm *_UKIDSS_TMP.fits.gz")
-            query_wsa_fits(ra,de,size=size,output_file='UKIDSS_TMP.fits.gz',filter='all',\
-                catalog='UKIDSS')
+            query_wsa_fits(ra,de,size=size,output_file='UKIDSS_TMP.fits.gz',filter='all',catalog='UKIDSS')
         
         if VHS:
             print "Downloading VHS data"
             #Remove previous data
             os.system("rm *_VHS_TMP.fits.gz")
-            query_wsa_fits(ra,de,size=size,output_file='VHS_TMP.fits.gz',filter='all',\
-                catalog='VHS')
+            query_wsa_fits(ra,de,size=size,output_file='VHS_TMP.fits.gz',filter='all',catalog='VHS')
         
         if PSO:
             print "Downloading Pan-Starrs data"
@@ -154,25 +147,15 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
             query_pso_fits(ra,de,size=size,output_file='PSO_TMP.fits')
     
     #If no UKIDSS data could be downloaded, turn off the UKIDSS option
-    if (os.path.exists('Y_UKIDSS_TMP.fits.gz') is not True) and \
-        (os.path.exists('J_UKIDSS_TMP.fits.gz') is not True) and \
-        (os.path.exists('H_UKIDSS_TMP.fits.gz') is not True) and \
-        (os.path.exists('K_UKIDSS_TMP.fits.gz') is not True):
+    if glob.glob('*_UKIDSS_TMP.fits*') is not True:
         UKIDSS = None
     
     #If no VHS data could be downloaded, turn off the VHS option
-    if (os.path.exists('Y_VHS_TMP.fits.gz') is not True) and \
-        (os.path.exists('J_VHS_TMP.fits.gz') is not True) and \
-        (os.path.exists('H_VHS_TMP.fits.gz') is not True) and \
-        (os.path.exists('Ks_VHS_TMP.fits.gz') is not True):
+    if glob.glob('*_VHS_TMP.fits*') is not True:
         VHS = None
     
     #If no PSO data could be downloaded, turn off the PSO option
-    if (os.path.exists('g_PSO_TMP.fits') is not True) and \
-        (os.path.exists('r_PSO_TMP.fits') is not True) and \
-        (os.path.exists('i_PSO_TMP.fits') is not True) and \
-        (os.path.exists('z_PSO_TMP.fits') is not True) and \
-        (os.path.exists('y_PSO_TMP.fits') is not True):
+    if glob.glob('*_PSO_TMP.fits*') is not True:
         PSO = None
     
     #Determine the amount of additional rows needed
@@ -249,12 +232,14 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
     pdb.set_trace()
     if rejtmass:
         cmd4 = 'curl -o rejtmass.tbl "http://irsa.ipac.caltech.edu/TAP/sync?FORMAT=IPAC_TABLE&QUERY=SELECT+ra,dec,rel+FROM+pt_src_rej+WHERE+CONTAINS(POINT(\'J2000\',ra,dec),CIRCLE(\'J2000\','+str(ra)+','+str(de)+','+str(size/60.0)+'))=1"'
+        #This is a temporary work-out, but only fetches rel='A' entries
+        #cmd4 = 'wget -O rejtmass.tbl "http://irsa.ipac.caltech.edu/cgi-bin/Gator/nph-query?spatial=Box&size='+str(size*60.0)+'&radunits=arcsec&objstr='+str(ra)+','+str(de)+'&catalog=pt_src_rej&selcols=ra,dec&outfmt=1"'
         os.system(cmd4)
         try:
-            rejtmass_psc = np.loadtxt('rejtmass.tbl',skiprows=37,unpack=True,usecols=(0,1))
+            rejtmass_psc = np.loadtxt('rejtmass.tbl',skiprows=14,unpack=True,usecols=(0,1))
             rejtmass_ra,rejtmass_de = rejtmass_psc
         except:
-            print "No 2MASS sources found!"
+            print "No 2MASS-Reject sources found!"
             rejtmass=False
 
     if plot:
@@ -269,8 +254,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
                 rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,\
                 tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,\
                 allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,\
-                tmass_ra=tmass_ra,tmass_de=tmass_de,rejtmass_ra=rejtmass_ra,\
-                rejtmass_de=rejtmass_de,circle_radius=circle_radius)
+                tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius)
             if primarypos_label:
                 im.add_label(0.03,0.8,primarypos_label,relative=True,size='medium',color='r',horizontalalignment='left')
             if secondary and secondarypos_label:
@@ -282,8 +266,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
                 rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,\
                 tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,\
                 allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,\
-                tmass_ra=tmass_ra,tmass_de=tmass_de,rejtmass_ra=rejtmass_ra,\
-                rejtmass_de=rejtmass_de,circle_radius=circle_radius)
+                tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius)
     
         if images[i][1] == 'DSS2 Blue':
             oplotfits(fig,'DSS2_Blue.fits',nyplot,nxplot,3,ra,de,'DSS2 B',xlabel=0.2,\
@@ -291,8 +274,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
                 rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,\
                 tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,\
                 allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,\
-                tmass_ra=tmass_ra,tmass_de=tmass_de,rejtmass_ra=rejtmass_ra,\
-                rejtmass_de=rejtmass_de,circle_radius=circle_radius)
+                tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius)
     
         if images[i][1] == 'DSS2 Red':
             oplotfits(fig,'DSS2_Red.fits',nyplot,nxplot,4,ra,de,'DSS2 R',xlabel=0.2,\
@@ -300,8 +282,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
                 rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,\
                 tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,\
                 allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,\
-                tmass_ra=tmass_ra,tmass_de=tmass_de,rejtmass_ra=rejtmass_ra,\
-                rejtmass_de=rejtmass_de,circle_radius=circle_radius)
+                tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius)
             
         if images[i][1] == 'DSS2 IR':
             oplotfits(fig,'DSS2_IR.fits',nyplot,nxplot,5,ra,de,'DSS2 IR',xlabel=0.2,\
@@ -309,8 +290,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
                 rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,\
                 tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,\
                 allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,\
-                tmass_ra=tmass_ra,tmass_de=tmass_de,rejtmass_ra=rejtmass_ra,\
-                rejtmass_de=rejtmass_de,circle_radius=circle_radius)
+                tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius)
         
         if images[i][1] == 'J':
             oplotfits(fig,'2MASS_J.fits',nyplot,nxplot,6+tmass_spacing*nxplot,ra,de,\
@@ -327,8 +307,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
                 hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,\
                 rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,\
                 allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,\
-                tmass_ra=tmass_ra,tmass_de=tmass_de,rejtmass_ra=rejtmass_ra,\
-                rejtmass_de=rejtmass_de,circle_radius=circle_radius)
+                tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius,rejtmass_ra=rejtmass_ra,rejtmass_de=rejtmass_de)
         
         if images[i][1] == 'K':
             oplotfits(fig,'2MASS_K.fits',nyplot,nxplot,8+tmass_spacing*nxplot,ra,de,\
@@ -336,8 +315,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
                 hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,\
                 rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,\
                 allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,\
-                tmass_ra=tmass_ra,tmass_de=tmass_de,rejtmass_ra=rejtmass_ra,\
-                rejtmass_de=rejtmass_de,circle_radius=circle_radius)
+                tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius,rejtmass_ra=rejtmass_ra,rejtmass_de=rejtmass_ra)
         
         if images[i][1] == 'w1':
             wmin1, wmax1, im = oplotfits(fig,'AllWISE_w1.fits',nyplot,nxplot,\
@@ -346,7 +324,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
                 tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,\
                 secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,\
                 rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,\
-                tmass_de=tmass_de,rejtmass_ra=rejtmass_ra,rejtmass_de=rejtmass_de,\
+                tmass_de=tmass_de,\
                 circle_radius=circle_radius)
             im.axis_labels.set_xtext('RA (arcmin)')
             im.axis_labels.set_ytext('Dec (arcmin)')
@@ -358,7 +336,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
                 tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,\
                 secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,\
                 rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,\
-                tmass_de=tmass_de,rejtmass_ra=rejtmass_ra,rejtmass_de=rejtmass_de,\
+                tmass_de=tmass_de,\
                 circle_radius=circle_radius)
         
         if images[i][1] == 'w3':
@@ -368,7 +346,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
                 tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,\
                 secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,\
                 rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,\
-                tmass_de=tmass_de,rejtmass_ra=rejtmass_ra,rejtmass_de=rejtmass_de,\
+                tmass_de=tmass_de,\
                 circle_radius=circle_radius)
         
         if images[i][1] == 'w4':
@@ -378,7 +356,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
                 tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,\
                 secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,\
                 rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,\
-                tmass_de=tmass_de,rejtmass_ra=rejtmass_ra,rejtmass_de=rejtmass_de,\
+                tmass_de=tmass_de,\
                 circle_radius=circle_radius)
     
     # Plot PSO images
@@ -391,13 +369,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
             hdulist.close()
             gregdate = jd2gcal(2400000.5, jd)
             year = '{0:.0f}'.format(gregdate[0]+gregdate[1]/12.0)
-            wminpsog, wmaxpsog, void = oplotfits(fig,fitsfile,nyplot,nxplot,6,ra,de,\
-                'PSO $g$',xlabel=0.2,year=year,ra2=ra2,de2=de2,north=False,hdu=0,\
-                allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,\
-                rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,\
-                allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,\
-                rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,\
-                rejtmass_ra=rejtmass_ra,rejtmass_de=rejtmass_de,circle_radius=circle_radius)
+            wminpsog, wmaxpsog, void = oplotfits(fig,fitsfile,nyplot,nxplot,6,ra,de,'PSO $g$',xlabel=0.2,year=year,ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius)
         except:
             pass
         try:#r band
@@ -408,13 +380,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
             hdulist.close()
             gregdate = jd2gcal(2400000.5, jd)
             year = '{0:.0f}'.format(gregdate[0]+gregdate[1]/12.0)
-            wminpsor, wmaxpsor, void = oplotfits(fig,fitsfile,nyplot,nxplot,7,ra,de,\
-                'PSO $r$',xlabel=0.2,year=year,ra2=ra2,de2=de2,north=False,hdu=0,\
-                allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,\
-                rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,\
-                allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,\
-                tmass_ra=tmass_ra,tmass_de=tmass_de,rejtmass_ra=rejtmass_ra,\
-                rejtmass_de=rejtmass_de,circle_radius=circle_radius)
+            wminpsor, wmaxpsor, void = oplotfits(fig,fitsfile,nyplot,nxplot,7,ra,de,'PSO $r$',xlabel=0.2,year=year,ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius)
         except:
             pass
         try:#i band
@@ -425,13 +391,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
             hdulist.close()
             gregdate = jd2gcal(2400000.5, jd)
             year = '{0:.0f}'.format(gregdate[0]+gregdate[1]/12.0)
-            wminpsoi, wmaxpsoi, void = oplotfits(fig,fitsfile,nyplot,nxplot,8,ra,de,\
-                'PSO $i$',xlabel=0.2,year=year,ra2=ra2,de2=de2,north=False,hdu=0,\
-                allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,\
-                rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,\
-                allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,\
-                tmass_ra=tmass_ra,tmass_de=tmass_de,rejtmass_ra=rejtmass_ra,\
-                rejtmass_de=rejtmass_de,circle_radius=circle_radius)
+            wminpsoi, wmaxpsoi, void = oplotfits(fig,fitsfile,nyplot,nxplot,8,ra,de,'PSO $i$',xlabel=0.2,year=year,ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius)
         except:
             pass
         try:#z band
@@ -442,13 +402,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
             hdulist.close()
             gregdate = jd2gcal(2400000.5, jd)
             year = '{0:.0f}'.format(gregdate[0]+gregdate[1]/12.0)
-            wminpsoz, wmaxpsoz, void = oplotfits(fig,fitsfile,nyplot,nxplot,9,ra,de,\
-                'PSO $z$',xlabel=0.2,year=year,ra2=ra2,de2=de2,north=False,hdu=0,\
-                allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,\
-                rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,\
-                allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,\
-                rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,\
-                rejtmass_ra=rejtmass_ra,rejtmass_de=rejtmass_de,circle_radius=circle_radius)
+            wminpsoz, wmaxpsoz, void = oplotfits(fig,fitsfile,nyplot,nxplot,9,ra,de,'PSO $z$',xlabel=0.2,year=year,ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius)
         except:
             pass
         try:#y band
@@ -459,13 +413,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
             hdulist.close()
             gregdate = jd2gcal(2400000.5, jd)
             year = '{0:.0f}'.format(gregdate[0]+gregdate[1]/12.0)
-            wminpsoy, wmaxpsoy, void = oplotfits(fig,fitsfile,nyplot,nxplot,10,ra,de,\
-                'PSO $y$',xlabel=0.2,year=year,ra2=ra2,de2=de2,north=False,hdu=0,\
-                allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,\
-                rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,\
-                allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,\
-                rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,\
-                rejtmass_ra=rejtmass_ra,rejtmass_de=rejtmass_de,circle_radius=circle_radius)
+            wminpsoy, wmaxpsoy, void = oplotfits(fig,fitsfile,nyplot,nxplot,10,ra,de,'PSO $y$',xlabel=0.2,year=year,ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius)
         except:
             pass
     
@@ -477,13 +425,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
             hdulist = pyfits.open(fitsfile)
             year = hdulist[0].header['UTDATE'][0:4]
             hdulist.close()
-            oplotfits(fig,fitsfile,nyplot,nxplot,6+ukidss_spacing*nxplot,ra,de,\
-                'UKIDSS Y',xlabel=0.3,year=year,ra2=ra2,de2=de2,north=True,hdu=1,\
-                allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,\
-                rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,\
-                allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,\
-                rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,\
-                rejtmass_ra=rejtmass_ra,rejtmass_de=rejtmass_de,circle_radius=circle_radius)
+            oplotfits(fig,fitsfile,nyplot,nxplot,6+ukidss_spacing*nxplot,ra,de,'UKIDSS Y',xlabel=0.3,year=year,ra2=ra2,de2=de2,north=True,hdu=1,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius)
         except:
             pass
         try:#J band
@@ -492,13 +434,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
             hdulist = pyfits.open(fitsfile)
             year = hdulist[0].header['UTDATE'][0:4]
             hdulist.close()
-            oplotfits(fig,fitsfile,nyplot,nxplot,7+ukidss_spacing*nxplot,ra,de,\
-                'UKIDSS J',xlabel=0.3,year=year,ra2=ra2,de2=de2,north=True,hdu=1,\
-                allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,\
-                rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,\
-                allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,\
-                rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,\
-                rejtmass_ra=rejtmass_ra,rejtmass_de=rejtmass_de,circle_radius=circle_radius)
+            oplotfits(fig,fitsfile,nyplot,nxplot,7+ukidss_spacing*nxplot,ra,de,'UKIDSS J',xlabel=0.3,year=year,ra2=ra2,de2=de2,north=True,hdu=1,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius)
         except:
             pass
         try:#H band
@@ -507,13 +443,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
             hdulist = pyfits.open(fitsfile)
             year = hdulist[0].header['UTDATE'][0:4]
             hdulist.close()
-            oplotfits(fig,fitsfile,nyplot,nxplot,8+ukidss_spacing*nxplot,ra,de,\
-                'UKIDSS H',xlabel=0.3,year=year,ra2=ra2,de2=de2,north=True,hdu=1,\
-                allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,\
-                rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,\
-                allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,\
-                rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,\
-                rejtmass_ra=rejtmass_ra,rejtmass_de=rejtmass_de,circle_radius=circle_radius)
+            oplotfits(fig,fitsfile,nyplot,nxplot,8+ukidss_spacing*nxplot,ra,de,'UKIDSS H',xlabel=0.3,year=year,ra2=ra2,de2=de2,north=True,hdu=1,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius)
         except:
             pass
         try:#K band
@@ -522,13 +452,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
             hdulist = pyfits.open(fitsfile)
             year = hdulist[0].header['UTDATE'][0:4]
             hdulist.close()
-            oplotfits(fig,fitsfile,nyplot,nxplot,9+ukidss_spacing*nxplot,ra,de,\
-                'UKIDSS K',xlabel=0.3,year=year,ra2=ra2,de2=de2,north=True,hdu=1,\
-                allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,\
-                rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,\
-                allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,\
-                rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,\
-                rejtmass_ra=rejtmass_ra,rejtmass_de=rejtmass_de,circle_radius=circle_radius)
+            oplotfits(fig,fitsfile,nyplot,nxplot,9+ukidss_spacing*nxplot,ra,de,'UKIDSS K',xlabel=0.3,year=year,ra2=ra2,de2=de2,north=True,hdu=1,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius)
         except:
             pass
     
@@ -540,13 +464,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
             hdulist = pyfits.open(fitsfile)
             year = hdulist[1].header['DATE'][0:4]
             hdulist.close()
-            oplotfits(fig,fitsfile,nyplot,nxplot,6+vhs_spacing*nxplot,ra,de,\
-                'VHS $Y$',xlabel=0.2,year=year,ra2=ra2,de2=de2,north=True,hdu=1,\
-                allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,\
-                rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,\
-                allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,\
-                rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,\
-                rejtmass_ra=rejtmass_ra,rejtmass_de=rejtmass_de,circle_radius=circle_radius)
+            oplotfits(fig,fitsfile,nyplot,nxplot,6+vhs_spacing*nxplot,ra,de,'VHS $Y$',xlabel=0.2,year=year,ra2=ra2,de2=de2,north=True,hdu=1,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius)
         except:
             pass
         try:#J band
@@ -555,13 +473,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
             hdulist = pyfits.open(fitsfile)
             year = hdulist[1].header['DATE'][0:4]
             hdulist.close()
-            oplotfits(fig,fitsfile,nyplot,nxplot,7+vhs_spacing*nxplot,ra,de,\
-                'VHS $J$',xlabel=0.2,year=year,ra2=ra2,de2=de2,north=True,hdu=1,\
-                allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,\
-                rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,\
-                allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,\
-                rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,\
-                rejtmass_ra=rejtmass_ra,rejtmass_de=rejtmass_de,circle_radius=circle_radius)
+            oplotfits(fig,fitsfile,nyplot,nxplot,7+vhs_spacing*nxplot,ra,de,'VHS $J$',xlabel=0.2,year=year,ra2=ra2,de2=de2,north=True,hdu=1,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius)
         except:
             pass
         try:#H band
@@ -570,13 +482,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
             hdulist = pyfits.open(fitsfile)
             year = hdulist[1].header['DATE'][0:4]
             hdulist.close()
-            oplotfits(fig,fitsfile,nyplot,nxplot,8+vhs_spacing*nxplot,ra,de,\
-                'VHS $H$',xlabel=0.2,year=year,ra2=ra2,de2=de2,north=True,hdu=1,\
-                allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,\
-                rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,\
-                allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,\
-                rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,\
-                rejtmass_ra=rejtmass_ra,rejtmass_de=rejtmass_de,circle_radius=circle_radius)
+            oplotfits(fig,fitsfile,nyplot,nxplot,8+vhs_spacing*nxplot,ra,de,'VHS $H$',xlabel=0.2,year=year,ra2=ra2,de2=de2,north=True,hdu=1,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius)
         except:
             pass
         try:#Ks band
@@ -585,13 +491,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
             hdulist = pyfits.open(fitsfile)
             year = hdulist[1].header['DATE'][0:4]
             hdulist.close()
-            oplotfits(fig,fitsfile,nyplot,nxplot,9+vhs_spacing*nxplot,ra,de,\
-                'VHS $K_S$',xlabel=0.2,year=year,ra2=ra2,de2=de2,north=True,hdu=1,\
-                allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,\
-                rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,\
-                allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,\
-                rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,\
-                rejtmass_ra=rejtmass_ra,rejtmass_de=rejtmass_de,circle_radius=circle_radius)
+            oplotfits(fig,fitsfile,nyplot,nxplot,9+vhs_spacing*nxplot,ra,de,'VHS $K_S$',xlabel=0.2,year=year,ra2=ra2,de2=de2,north=True,hdu=1,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius)
         except:
             pass
     
