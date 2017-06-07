@@ -184,12 +184,13 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
     nyplot += vertical_spacing
     fig_ysize *= np.sqrt(13.0/8.5)**(vertical_spacing-1.0)
     
-    # Plot the data
+    # Download the catalog data
     allwise_ra = None
     allwise_de = None
     if allwise:
-        cmd1 = 'wget -O allwise.tbl "http://irsa.ipac.caltech.edu/cgi-bin/Gator/nph-query?spatial=Box&size=120.0&radunits=arcsec&objstr='+str(ra)+','+str(de)+'&catalog=allwise_p3as_psd&selcols=ra,dec&outfmt=1"'
-        os.system(cmd1)
+        if skipdownloads is not True:
+            cmd1 = 'wget -O allwise.tbl "http://irsa.ipac.caltech.edu/cgi-bin/Gator/nph-query?spatial=Box&size=120.0&radunits=arcsec&objstr='+str(ra)+','+str(de)+'&catalog=allwise_p3as_psd&selcols=ra,dec&outfmt=1"'
+            os.system(cmd1)
         try:
             awise = np.loadtxt('allwise.tbl',skiprows=27,unpack=True,usecols=(0,1))
             allwise_ra,allwise_de = awise
@@ -200,8 +201,9 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
     rejallwise_ra = None
     rejallwise_de = None
     if rejallwise:
-        cmd2 = 'wget -O rejallwise.tbl "http://irsa.ipac.caltech.edu/cgi-bin/Gator/nph-query?spatial=Box&size=120.0&radunits=arcsec&objstr='+str(ra)+','+str(de)+'&catalog=allwise_p3as_psr&selcols=ra,dec&outfmt=1"'
-        os.system(cmd2)
+        if skipdownloads is not True:
+            cmd2 = 'wget -O rejallwise.tbl "http://irsa.ipac.caltech.edu/cgi-bin/Gator/nph-query?spatial=Box&size=120.0&radunits=arcsec&objstr='+str(ra)+','+str(de)+'&catalog=allwise_p3as_psr&selcols=ra,dec&outfmt=1"'
+            os.system(cmd2)
         try:
             rejawise = np.loadtxt('rejallwise.tbl',skiprows=27,unpack=True,usecols=(0,1))
             rejallwise_ra,rejallwise_de = rejawise
@@ -211,9 +213,10 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
     
     tmass_ra = None
     tmass_de = None
-    if tmass:
-        cmd3 = 'wget -O tmass.tbl "http://irsa.ipac.caltech.edu/cgi-bin/Gator/nph-query?spatial=Box&size=120.0&radunits=arcsec&objstr='+str(ra)+','+str(de)+'&catalog=fp_psc&selcols=ra,dec&outfmt=1"'
-        os.system(cmd3)
+    if tmass or rejtmass:
+        if skipdownloads is not True:
+            cmd3 = 'wget -O tmass.tbl "http://irsa.ipac.caltech.edu/cgi-bin/Gator/nph-query?spatial=Box&size=120.0&radunits=arcsec&objstr='+str(ra)+','+str(de)+'&catalog=fp_psc&selcols=ra,dec&outfmt=1"'
+            os.system(cmd3)
         try:
             tmass_psc = np.loadtxt('tmass.tbl',skiprows=37,unpack=True,usecols=(0,1))
             tmass_ra,tmass_de = tmass_psc
@@ -223,12 +226,12 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
     
     rejtmass_ra = None
     rejtmass_de = None
-    #pdb.set_trace()
     if rejtmass:
-        cmd4 = 'curl -o rejtmass.tbl "http://irsa.ipac.caltech.edu/TAP/sync?FORMAT=IPAC_TABLE&QUERY=SELECT+ra,dec,rel+FROM+pt_src_rej+WHERE+CONTAINS(POINT(\'J2000\',ra,dec),CIRCLE(\'J2000\','+str(ra)+','+str(de)+','+str(size/60.0)+'))=1"'
-        #This is a temporary work-out, but only fetches rel='A' entries
-        #cmd4 = 'wget -O rejtmass.tbl "http://irsa.ipac.caltech.edu/cgi-bin/Gator/nph-query?spatial=Box&size='+str(size*60.0)+'&radunits=arcsec&objstr='+str(ra)+','+str(de)+'&catalog=pt_src_rej&selcols=ra,dec&outfmt=1"'
-        os.system(cmd4)
+        if skipdownloads is not True:
+            cmd4 = 'curl -o rejtmass.tbl "http://irsa.ipac.caltech.edu/TAP/sync?FORMAT=IPAC_TABLE&QUERY=SELECT+ra,dec,rel+FROM+pt_src_rej+WHERE+CONTAINS(POINT(\'J2000\',ra,dec),CIRCLE(\'J2000\','+str(ra)+','+str(de)+','+str(size/60.0)+'))=1"'
+            #This is a temporary work-out, but only fetches rel='A' entries
+            #cmd4 = 'wget -O rejtmass.tbl "http://irsa.ipac.caltech.edu/cgi-bin/Gator/nph-query?spatial=Box&size='+str(size*60.0)+'&radunits=arcsec&objstr='+str(ra)+','+str(de)+'&catalog=pt_src_rej&selcols=ra,dec&outfmt=1"'
+            os.system(cmd4)
         try:
             rejtmass_psc = np.loadtxt('rejtmass.tbl',skiprows=14,unpack=True,usecols=(0,1))
             rejtmass_ra,rejtmass_de = rejtmass_psc
@@ -268,7 +271,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
             oplotfits(fig,'2MASS_H.fits',nyplot,nxplot,7+tmass_spacing*nxplot,ra,de,'2MASS $H$',xlabel=0.25,year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius,rejtmass_ra=rejtmass_ra,rejtmass_de=rejtmass_de)
         
         if images[i][1] == 'K':
-            oplotfits(fig,'2MASS_K.fits',nyplot,nxplot,8+tmass_spacing*nxplot,ra,de,'2MASS $K_S$',xlabel=0.25,year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius,rejtmass_ra=rejtmass_ra,rejtmass_de=rejtmass_ra)
+            oplotfits(fig,'2MASS_K.fits',nyplot,nxplot,8+tmass_spacing*nxplot,ra,de,'2MASS $K_S$',xlabel=0.25,year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius,rejtmass_ra=rejtmass_ra,rejtmass_de=rejtmass_de)
         
         if images[i][1] == 'w1':
             wmin1, wmax1, im = oplotfits(fig,'AllWISE_w1.fits',nyplot,nxplot,6+allwise_spacing*nxplot,ra,de,'W1',xlabel=0.1,year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius)
@@ -578,7 +581,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
     tdiff = (t2 - t1)
     print "Finder creation took %s seconds" % (round(tdiff.total_seconds(),0))
 
-def oplotfits(fig,fitsfile,nyplot,nxplot,position,ra,de,label,year='',xlabel=0.1,ra2=None,de2=None,north=False,hdu=0,allwise=False,rejallwise=False,tmass=False,rejtmass=False,allcolor='#FFFF00',rejcolor='b',tm_color='r',secondary='',allwise_ra=None,allwise_de=None,rejallwise_ra=None,rejallwise_de=None,tmass_ra=None,tmass_de=None,rejtmass_ra=None,rejtmass_de=None,circle_radius=0.0025):
+def oplotfits(fig,fitsfile,nyplot,nxplot,position,ra,de,label,year='',xlabel=0.1,ra2=None,de2=None,north=False,hdu=0,allwise=False,rejallwise=False,tmass=False,allcolor='#FFFF00',rejcolor='b',tm_color='r',secondary='',allwise_ra=None,allwise_de=None,rejallwise_ra=None,rejallwise_de=None,tmass_ra=None,tmass_de=None,rejtmass_ra=None,rejtmass_de=None,circle_radius=0.0025):
     
     im = aplpy.FITSFigure(fitsfile,figure=fig,subplot=(nyplot,nxplot,position),north=north,hdu=hdu)
     im.hide_tick_labels()
@@ -606,7 +609,10 @@ def oplotfits(fig,fitsfile,nyplot,nxplot,position,ra,de,label,year='',xlabel=0.1
     if rejallwise:
         im.show_circles(rejallwise_ra,rejallwise_de,edgecolor='k',facecolor=rejcolor,radius=0.0004,linewidth=0.5)
     if tmass:
-        im.show_circles(tmass_ra,tmass_de,edgecolor='k',facecolor=tm_color,radius=0.0004,linewidth=0.5)
-    if rejtmass:
-        im.show_circles(rejtmass_ra,rejtmass_de,edgecolor='k',facecolor=rejcolor,radius=0.0004,linewidth=0.5)
+        im.show_circles(tmass_ra,tmass_de,edgecolor=allcolor,radius=0.0015,linewidth=1.5)
+    if (rejtmass_ra is not None) and (rejtmass_de is not None):
+        im.show_circles(rejtmass_ra,rejtmass_de,edgecolor=allcolor,radius=0.001,linewidth=0.5,alpha=0.8)
+        #If possible, also display 2MASS main catalog sources if rejtmass is set
+        if (not tmass) and (tmass_ra is not None) and (tmass_de is not None):
+            im.show_circles(tmass_ra,tmass_de,edgecolor=allcolor,radius=0.0015,linewidth=1.5,alpha=0.8)
     return min1, max1, im
