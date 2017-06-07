@@ -153,7 +153,6 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
         VHS = None
     
     #If no PSO data could be downloaded, turn off the PSO option
-    pdb.set_trace()
     if glob.glob('*_PSO_TMP.fits*') is None:
         PSO = None
     
