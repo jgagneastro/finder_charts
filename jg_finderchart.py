@@ -188,9 +188,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
     allwise_ra = None
     allwise_de = None
     if allwise:
-        cmd1 = 'wget -O allwise.tbl "http://irsa.ipac.caltech.edu/cgi-bin/Gator/nph-query?'+\
-            'spatial=Box&size=120.0&radunits=arcsec&objstr='+\
-            str(ra)+','+str(de)+'&catalog=allwise_p3as_psd&selcols=ra,dec&outfmt=1"'
+        cmd1 = 'wget -O allwise.tbl "http://irsa.ipac.caltech.edu/cgi-bin/Gator/nph-query?spatial=Box&size=120.0&radunits=arcsec&objstr='+str(ra)+','+str(de)+'&catalog=allwise_p3as_psd&selcols=ra,dec&outfmt=1"'
         os.system(cmd1)
         try:
             awise = np.loadtxt('allwise.tbl',skiprows=27,unpack=True,usecols=(0,1))
@@ -202,9 +200,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
     rejallwise_ra = None
     rejallwise_de = None
     if rejallwise:
-        cmd2 = 'wget -O rejallwise.tbl "http://irsa.ipac.caltech.edu/cgi-bin/Gator/nph-query?'+\
-            'spatial=Box&size=120.0&radunits=arcsec&objstr='+\
-            str(ra)+','+str(de)+'&catalog=allwise_p3as_psr&selcols=ra,dec&outfmt=1"'
+        cmd2 = 'wget -O rejallwise.tbl "http://irsa.ipac.caltech.edu/cgi-bin/Gator/nph-query?spatial=Box&size=120.0&radunits=arcsec&objstr='+str(ra)+','+str(de)+'&catalog=allwise_p3as_psr&selcols=ra,dec&outfmt=1"'
         os.system(cmd2)
         try:
             rejawise = np.loadtxt('rejallwise.tbl',skiprows=27,unpack=True,usecols=(0,1))
@@ -216,9 +212,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
     tmass_ra = None
     tmass_de = None
     if tmass:
-        cmd3 = 'wget -O tmass.tbl "http://irsa.ipac.caltech.edu/cgi-bin/Gator/nph-query?'+\
-            'spatial=Box&size=120.0&radunits=arcsec&objstr='+\
-            str(ra)+','+str(de)+'&catalog=fp_psc&selcols=ra,dec&outfmt=1"'
+        cmd3 = 'wget -O tmass.tbl "http://irsa.ipac.caltech.edu/cgi-bin/Gator/nph-query?spatial=Box&size=120.0&radunits=arcsec&objstr='+str(ra)+','+str(de)+'&catalog=fp_psc&selcols=ra,dec&outfmt=1"'
         os.system(cmd3)
         try:
             tmass_psc = np.loadtxt('tmass.tbl',skiprows=37,unpack=True,usecols=(0,1))
@@ -249,115 +243,46 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
     
     for i in range(len(images)):
         if images[i][1] == 'DSS1 Blue':
-            min1, max1, im = oplotfits(fig,'DSS1_Blue.fits',nyplot,nxplot,1,ra,de,'DSS1 B',xlabel=0.2,\
-                year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,\
-                rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,\
-                tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,\
-                allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,\
-                tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius)
+            min1, max1, im = oplotfits(fig,'DSS1_Blue.fits',nyplot,nxplot,1,ra,de,'DSS1 B',xlabel=0.2,year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius)
             if primarypos_label:
                 im.add_label(0.03,0.8,primarypos_label,relative=True,size='medium',color='r',horizontalalignment='left')
             if secondary and secondarypos_label:
                 im.add_label(0.03,0.7,secondarypos_label,relative=True,size='medium',color='b',horizontalalignment='left')
 
         if images[i][1] == 'DSS1 Red':
-            oplotfits(fig,'DSS1_Red.fits',nyplot,nxplot,2,ra,de,'DSS1 R',xlabel=0.2,\
-                year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,\
-                rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,\
-                tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,\
-                allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,\
-                tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius)
+            oplotfits(fig,'DSS1_Red.fits',nyplot,nxplot,2,ra,de,'DSS1 R',xlabel=0.2,year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius)
     
         if images[i][1] == 'DSS2 Blue':
-            oplotfits(fig,'DSS2_Blue.fits',nyplot,nxplot,3,ra,de,'DSS2 B',xlabel=0.2,\
-                year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,\
-                rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,\
-                tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,\
-                allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,\
-                tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius)
+            oplotfits(fig,'DSS2_Blue.fits',nyplot,nxplot,3,ra,de,'DSS2 B',xlabel=0.2,year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius)
     
         if images[i][1] == 'DSS2 Red':
-            oplotfits(fig,'DSS2_Red.fits',nyplot,nxplot,4,ra,de,'DSS2 R',xlabel=0.2,\
-                year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,\
-                rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,\
-                tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,\
-                allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,\
-                tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius)
+            oplotfits(fig,'DSS2_Red.fits',nyplot,nxplot,4,ra,de,'DSS2 R',xlabel=0.2,year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius)
             
         if images[i][1] == 'DSS2 IR':
-            oplotfits(fig,'DSS2_IR.fits',nyplot,nxplot,5,ra,de,'DSS2 IR',xlabel=0.2,\
-                year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,\
-                rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,\
-                tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,\
-                allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,\
-                tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius)
+            oplotfits(fig,'DSS2_IR.fits',nyplot,nxplot,5,ra,de,'DSS2 IR',xlabel=0.2,year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius)
         
         if images[i][1] == 'J':
-            oplotfits(fig,'2MASS_J.fits',nyplot,nxplot,6+tmass_spacing*nxplot,ra,de,\
-                '2MASS $J$',xlabel=0.25,year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,\
-                hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,\
-                rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,\
-                allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,\
-                tmass_ra=tmass_ra,tmass_de=tmass_de,rejtmass_ra=rejtmass_ra,rejtmass_de=rejtmass_de,\
-                circle_radius=circle_radius)
+            oplotfits(fig,'2MASS_J.fits',nyplot,nxplot,6+tmass_spacing*nxplot,ra,de,'2MASS $J$',xlabel=0.25,year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,rejtmass_ra=rejtmass_ra,rejtmass_de=rejtmass_de,circle_radius=circle_radius)
         
         if images[i][1] == 'H':
-            oplotfits(fig,'2MASS_H.fits',nyplot,nxplot,7+tmass_spacing*nxplot,ra,de,\
-                '2MASS $H$',xlabel=0.25,year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,\
-                hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,\
-                rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,\
-                allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,\
-                tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius,rejtmass_ra=rejtmass_ra,rejtmass_de=rejtmass_de)
+            oplotfits(fig,'2MASS_H.fits',nyplot,nxplot,7+tmass_spacing*nxplot,ra,de,'2MASS $H$',xlabel=0.25,year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius,rejtmass_ra=rejtmass_ra,rejtmass_de=rejtmass_de)
         
         if images[i][1] == 'K':
-            oplotfits(fig,'2MASS_K.fits',nyplot,nxplot,8+tmass_spacing*nxplot,ra,de,\
-                '2MASS $K_S$',xlabel=0.25,year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,\
-                hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,\
-                rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,\
-                allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,\
-                tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius,rejtmass_ra=rejtmass_ra,rejtmass_de=rejtmass_ra)
+            oplotfits(fig,'2MASS_K.fits',nyplot,nxplot,8+tmass_spacing*nxplot,ra,de,'2MASS $K_S$',xlabel=0.25,year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius,rejtmass_ra=rejtmass_ra,rejtmass_de=rejtmass_ra)
         
         if images[i][1] == 'w1':
-            wmin1, wmax1, im = oplotfits(fig,'AllWISE_w1.fits',nyplot,nxplot,\
-                6+allwise_spacing*nxplot,ra,de,'W1',xlabel=0.1,year=images[i][2][0:4],\
-                ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,\
-                tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,\
-                secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,\
-                rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,\
-                tmass_de=tmass_de,\
-                circle_radius=circle_radius)
+            wmin1, wmax1, im = oplotfits(fig,'AllWISE_w1.fits',nyplot,nxplot,6+allwise_spacing*nxplot,ra,de,'W1',xlabel=0.1,year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius)
             im.axis_labels.set_xtext('RA (arcmin)')
             im.axis_labels.set_ytext('Dec (arcmin)')
             
         if images[i][1] == 'w2':
-            wmin2, wmax2, void = oplotfits(fig,'AllWISE_w2.fits',nyplot,nxplot,\
-                7+allwise_spacing*nxplot,ra,de,'W2',xlabel=0.1,year=images[i][2][0:4],\
-                ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,\
-                tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,\
-                secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,\
-                rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,\
-                tmass_de=tmass_de,\
-                circle_radius=circle_radius)
+            wmin2, wmax2, void = oplotfits(fig,'AllWISE_w2.fits',nyplot,nxplot,7+allwise_spacing*nxplot,ra,de,'W2',xlabel=0.1,year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius)
         
         if images[i][1] == 'w3':
-            wmin3, wmax3, void = oplotfits(fig,'AllWISE_w3.fits',nyplot,nxplot,\
-                8+allwise_spacing*nxplot,ra,de,'W3',xlabel=0.1,year=images[i][2][0:4],\
-                ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,\
-                tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,\
-                secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,\
-                rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,\
-                tmass_de=tmass_de,\
-                circle_radius=circle_radius)
+            wmin3, wmax3, void = oplotfits(fig,'AllWISE_w3.fits',nyplot,nxplot,8+allwise_spacing*nxplot,ra,de,'W3',xlabel=0.1,year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius)
         
         if images[i][1] == 'w4':
-            wmin4, wmax4, void = oplotfits(fig,'AllWISE_w4.fits',nyplot,nxplot,\
-                9+allwise_spacing*nxplot,ra,de,'W4',xlabel=0.1,year=images[i][2][0:4],\
-                ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,\
-                tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,\
-                secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,\
-                rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,\
-                tmass_de=tmass_de,\
-                circle_radius=circle_radius)
+            wmin4, wmax4, void = oplotfits(fig,'AllWISE_w4.fits',nyplot,nxplot,9+allwise_spacing*nxplot,ra,de,'W4',xlabel=0.1,year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius)
     
     # Plot PSO images
     if PSO:
@@ -498,8 +423,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
     # Create and plot RGB AllWISE image
     files = ['AllWISE_w3.fits','AllWISE_w2.fits','AllWISE_w1.fits']
     aplpy.make_rgb_cube(files,'AllWISE_rgb.fits')
-    im20 = aplpy.FITSFigure('AllWISE_rgb_2d.fits',figure=fig,\
-        subplot=(nyplot,nxplot,10+allwise_spacing*nxplot))
+    im20 = aplpy.FITSFigure('AllWISE_rgb_2d.fits',figure=fig,subplot=(nyplot,nxplot,10+allwise_spacing*nxplot))
     meds = []
     mads = []
     devs = []
@@ -522,13 +446,10 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
         maxs.append(maxi)
     
     #aplpy.make_rgb_image('AllWISE_rgb.fits','AllWISE_rgb.png')
+    #aplpy.make_rgb_image('AllWISE_rgb.fits','AllWISE_rgb.png',vmin_r=mins[0],vmin_g=mins[1],vmin_b=mins[2])
     
-    #aplpy.make_rgb_image('AllWISE_rgb.fits','AllWISE_rgb.png',vmin_r=mins[0],\
-    #    vmin_g=mins[1],vmin_b=mins[2])
+    aplpy.make_rgb_image('AllWISE_rgb.fits','AllWISE_rgb.png',vmin_r=mins[0],vmin_g=mins[1],vmin_b=mins[2],vmax_r=maxs[0],vmax_g=maxs[1],vmax_b=maxs[2])
     
-    aplpy.make_rgb_image('AllWISE_rgb.fits','AllWISE_rgb.png',vmin_r=mins[0],\
-        vmin_g=mins[1],vmin_b=mins[2],vmax_r=maxs[0],vmax_g=maxs[1],vmax_b=maxs[2])
-        
     im20.show_rgb('AllWISE_rgb.png')
     im20.hide_tick_labels()
     im20.ticks.set_color('k')
@@ -540,8 +461,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
     im20.recenter(ra,de,width=(2.0/60.0),height=(2.0/60.0))
     im20.show_circles(ra,de,edgecolor='r',linewidth=0.7,facecolor='none',radius=circle_radius)
     if secondary:
-        im20.show_circles(ra2,de2,edgecolor='b',linewidth=0.7,facecolor='none',\
-            radius=circle_radius)
+        im20.show_circles(ra2,de2,edgecolor='b',linewidth=0.7,facecolor='none',radius=circle_radius)
     
     #Create and plot RGB PSO image only if there's enough space (vertical_spacing >= 2)
     if PSO and vertical_spacing >= 2:
@@ -576,13 +496,11 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
                 mins.append(mini)
                 maxs.append(maxi)
             
-            #aplpy.make_rgb_image('PSO_rgb.fits','PSO_rgb.png',vmin_r=mins[0],\
-            #    vmin_g=mins[1],vmin_b=mins[2],vmax_r=maxs[0],vmax_g=maxs[1],vmax_b=maxs[2])
+            #aplpy.make_rgb_image('PSO_rgb.fits','PSO_rgb.png',vmin_r=mins[0],vmin_g=mins[1],vmin_b=mins[2],vmax_r=maxs[0],vmax_g=maxs[1],vmax_b=maxs[2])
             
             aplpy.make_rgb_image('PSO_rgb.fits','PSO_rgb.png')
             
-            #aplpy.make_rgb_image('PSO_rgb.fits','PSO_rgb.png',vmin_r=wminpsoy,\
-            #    vmin_g=wminpsoi,vmin_b=wminpsog,vmax_r=wmaxpsoy,vmax_g=wmaxpsoi,vmax_b=wmaxpsog)
+            #aplpy.make_rgb_image('PSO_rgb.fits','PSO_rgb.png',vmin_r=wminpsoy,vmin_g=wminpsoi,vmin_b=wminpsog,vmax_r=wmaxpsoy,vmax_g=wmaxpsoi,vmax_b=wmaxpsog)
             
             impsoc.show_rgb('PSO_rgb.png')
             impsoc.hide_tick_labels()
@@ -593,18 +511,15 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
             impsoc.hide_xaxis_label()
             impsoc.hide_yaxis_label()
             impsoc.recenter(ra,de,width=(2.0/60.0),height=(2.0/60.0))
-            impsoc.show_circles(ra,de,edgecolor='r',linewidth=0.7,facecolor='none',\
-                radius=circle_radius)
+            impsoc.show_circles(ra,de,edgecolor='r',linewidth=0.7,facecolor='none',radius=circle_radius)
             if secondary:
-                impsoc.show_circles(ra2,de2,edgecolor='b',linewidth=0.7,facecolor='none',\
-                    radius=circle_radius)
+                impsoc.show_circles(ra2,de2,edgecolor='b',linewidth=0.7,facecolor='none',    radius=circle_radius)
         except:
             pass
     
     bottom_space = 0.05
     top_space = 0.05
-    pylab.subplots_adjust(left=0.05,right=0.95,bottom=bottom_space,top=1.0-top_space,\
-        wspace=0.05,hspace=0.05)
+    pylab.subplots_adjust(left=0.05,right=0.95,bottom=bottom_space,top=1.0-top_space,wspace=0.05,hspace=0.05)
     # Add Labels
     ras = deg2str(ra)
     des = deg2str(de,dec=1)
@@ -615,46 +530,33 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
     xlabels = .02
     ytoplabels = .89
     ydeltalabels = .12
-    sptext.annotate(r'$\alpha$ = '+ras+'\t('+str(round(ra,6))+')',\
-        xy=(xlabels,ytoplabels),fontsize=15)
-    sptext.annotate(r'$\delta$ = '+des+'\t('+str(round(de,6))+')',\
-        xy=(xlabels,ytoplabels-ydeltalabels),fontsize=15)
-    sptext.annotate(r'$l$ = '+str(round(c2.l.degree,3)),\
-        xy=(xlabels,ytoplabels-ydeltalabels*2),fontsize=15)
-    sptext.annotate(r'$b$ = '+str(round(c2.b.degree,3)),\
-        xy=(xlabels,ytoplabels-ydeltalabels*3),fontsize=15)
+    sptext.annotate(r'$\alpha$ = '+ras+'\t('+str(round(ra,6))+')',xy=(xlabels,ytoplabels),fontsize=15)
+    sptext.annotate(r'$\delta$ = '+des+'\t('+str(round(de,6))+')',xy=(xlabels,ytoplabels-ydeltalabels),fontsize=15)
+    sptext.annotate(r'$l$ = '+str(round(c2.l.degree,3)),xy=(xlabels,ytoplabels-ydeltalabels*2),fontsize=15)
+    sptext.annotate(r'$b$ = '+str(round(c2.b.degree,3)),xy=(xlabels,ytoplabels-ydeltalabels*3),fontsize=15)
     if addtext:
         sptext.annotate(addtext,xy=(xlabels,ytoplabels-ydeltalabels*4),fontsize=15)
     if addtext2:
         sptext.annotate(addtext2,xy=(xlabels,ytoplabels-ydeltalabels*5),fontsize=14)
     if allwise:
-        sptext.annotate('AllWISE catalog sources',\
-            xy=(xlabels+1e-3,ytoplabels-ydeltalabels*6-1e-3),fontsize=15,color='k')
-        sptext.annotate('AllWISE catalog sources',\
-            xy=(xlabels,ytoplabels-ydeltalabels*6),fontsize=15,color=allcolor)
+        sptext.annotate('AllWISE catalog sources',xy=(xlabels+1e-3,ytoplabels-ydeltalabels*6-1e-3),fontsize=15,color='k')
+        sptext.annotate('AllWISE catalog sources',xy=(xlabels,ytoplabels-ydeltalabels*6),fontsize=15,color=allcolor)
     if rejallwise:
-        sptext.annotate('AllWISE reject sources',\
-            xy=(xlabels+1e-3,ytoplabels-ydeltalabels*7-1e-3),fontsize=15,color='k')
-        sptext.annotate('AllWISE reject sources',\
-            xy=(xlabels,ytoplabels-ydeltalabels*7),fontsize=15,color=rejcolor)
+        sptext.annotate('AllWISE reject sources',xy=(xlabels+1e-3,ytoplabels-ydeltalabels*7-1e-3),fontsize=15,color='k')
+        sptext.annotate('AllWISE reject sources',xy=(xlabels,ytoplabels-ydeltalabels*7),fontsize=15,color=rejcolor)
     if tmass:
-        sptext.annotate('2MASS catalog sources',\
-            xy=(xlabels+1e-3,ytoplabels-ydeltalabels*8-1e-3),fontsize=15,color='k')
-        sptext.annotate('2MASS catalog sources',\
-            xy=(xlabels,ytoplabels-ydeltalabels*8),fontsize=15,color=tm_color)
+        sptext.annotate('2MASS catalog sources',xy=(xlabels+1e-3,ytoplabels-ydeltalabels*8-1e-3),fontsize=15,color='k')
+        sptext.annotate('2MASS catalog sources',xy=(xlabels,ytoplabels-ydeltalabels*8),fontsize=15,color=tm_color)
     if rejtmass:
-        sptext.annotate('2MASS reject sources',\
-            xy=(xlabels+1e-3,ytoplabels-ydeltalabels*9-1e-3),fontsize=15,color='k')
-        sptext.annotate('2MASS reject sources',\
-            xy=(xlabels,ytoplabels-ydeltalabels*9),fontsize=15,color=tm_color)
+        sptext.annotate('2MASS reject sources',xy=(xlabels+1e-3,ytoplabels-ydeltalabels*9-1e-3),fontsize=15,color='k')
+        sptext.annotate('2MASS reject sources',xy=(xlabels,ytoplabels-ydeltalabels*9),fontsize=15,color=tm_color)
     
     # Remove files (or not)
     if keepfiles:
         pass
     else:
         print "Removing files..."
-        cmdrm1 = "rm source.xml 2MASS*.fits AllWISE*.fits DSS*.fits "+\
-            "AllWISE_rgb.png *UKIDSS_TMP.fits.gz *VHS_TMP.fits.gz UKIDSS_rgb*.fits UKIDSS_rgb.png PSO_rgb.png PSO_rgb*.fits"
+        cmdrm1 = "rm source.xml 2MASS*.fits AllWISE*.fits DSS*.fits "+,        "AllWISE_rgb.png *UKIDSS_TMP.fits.gz *VHS_TMP.fits.gz UKIDSS_rgb*.fits UKIDSS_rgb.png PSO_rgb.png PSO_rgb*.fits"
         os.system(cmdrm1)
         if allwise:
             cmdrm2 = "rm allwise.tbl"
@@ -676,14 +578,9 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
     tdiff = (t2 - t1)
     print "Finder creation took %s seconds" % (round(tdiff.total_seconds(),0))
 
-def oplotfits(fig,fitsfile,nyplot,nxplot,position,ra,de,label,year='',xlabel=0.1,\
-    ra2=None,de2=None,north=False,hdu=0,allwise=False,rejallwise=False,tmass=False,\
-    rejtmass=False,allcolor='#FFFF00',rejcolor='b',tm_color='r',secondary='',\
-    allwise_ra=None,allwise_de=None,rejallwise_ra=None,rejallwise_de=None,\
-    tmass_ra=None,tmass_de=None,rejtmass_ra=None,rejtmass_de=None,circle_radius=0.0025):
+def oplotfits(fig,fitsfile,nyplot,nxplot,position,ra,de,label,year='',xlabel=0.1,ra2=None,de2=None,north=False,hdu=0,allwise=False,rejallwise=False,tmass=False,,rejtmass=False,allcolor='#FFFF00',rejcolor='b',tm_color='r',secondary='',,allwise_ra=None,allwise_de=None,rejallwise_ra=None,rejallwise_de=None,,tmass_ra=None,tmass_de=None,rejtmass_ra=None,rejtmass_de=None,circle_radius=0.0025):
     
-    im = aplpy.FITSFigure(fitsfile,figure=fig,subplot=(nyplot,nxplot,position),\
-        north=north,hdu=hdu)
+    im = aplpy.FITSFigure(fitsfile,figure=fig,subplot=(nyplot,nxplot,position),,    north=north,hdu=hdu)
     im.hide_tick_labels()
     im.ticks.set_color('k')
     im.ticks.set_minor_frequency(0)
@@ -705,15 +602,11 @@ def oplotfits(fig,fitsfile,nyplot,nxplot,position,ra,de,label,year='',xlabel=0.1
     if year:
         im.add_label(0.15,0.1,year,relative=True,size='medium',color='k')
     if allwise:
-        im.show_circles(allwise_ra,allwise_de,edgecolor='k',facecolor=allcolor,\
-            radius=0.0004,linewidth=0.5)
+        im.show_circles(allwise_ra,allwise_de,edgecolor='k',facecolor=allcolor,radius=0.0004,linewidth=0.5)
     if rejallwise:
-        im.show_circles(rejallwise_ra,rejallwise_de,edgecolor='k',facecolor=rejcolor,\
-            radius=0.0004,linewidth=0.5)
+        im.show_circles(rejallwise_ra,rejallwise_de,edgecolor='k',facecolor=rejcolor,radius=0.0004,linewidth=0.5)
     if tmass:
-        im.show_circles(tmass_ra,tmass_de,edgecolor='k',facecolor=tm_color,radius=0.0004,\
-            linewidth=0.5)
+        im.show_circles(tmass_ra,tmass_de,edgecolor='k',facecolor=tm_color,radius=0.0004,linewidth=0.5)
     if rejtmass:
-        im.show_circles(rejtmass_ra,rejtmass_de,edgecolor='k',facecolor=rejcolor,radius=0.0004,\
-            linewidth=0.5)
+        im.show_circles(rejtmass_ra,rejtmass_de,edgecolor='k',facecolor=rejcolor,radius=0.0004,linewidth=0.5)
     return min1, max1, im
