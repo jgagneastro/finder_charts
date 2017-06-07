@@ -600,7 +600,7 @@ def oplotfits(fig,fitsfile,nyplot,nxplot,position,ra,de,label,year='',xlabel=0.1
     im.show_circles(ra,de,edgecolor='r',linewidth=0.7,facecolor='none',radius=circle_radius)
     if secondary:
         im.show_circles(ra2,de2,edgecolor='b',linewidth=0.7,facecolor='none',radius=circle_radius)
-    im.add_label(xlabel,0.9,label,relative=True,size='medium',color='k')
+    im.add_label(xlabel,0.9,label,relative=True,size='medium',color='k',bbox=dict(facecolor='white', alpha=0.5))
     if year:
         im.add_label(0.15,0.1,year,relative=True,size='medium',color='k')
     if allwise:
