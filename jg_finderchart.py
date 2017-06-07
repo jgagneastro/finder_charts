@@ -755,7 +755,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
     else:
         print "Removing files..."
         cmdrm1 = "rm source.xml 2MASS*.fits AllWISE*.fits DSS*.fits "+\
-            "AllWISE_rgb.png *UKIDSS_TMP.fits.gz *VHS_TMP.fits.gz UKIDSS_rgb*.fits UKIDSS_rgb.png"
+            "AllWISE_rgb.png *UKIDSS_TMP.fits.gz *VHS_TMP.fits.gz UKIDSS_rgb*.fits UKIDSS_rgb.png PSO_rgb.png PSO_rgb*.fits"
         os.system(cmdrm1)
         if allwise:
             cmdrm2 = "rm allwise.tbl"
