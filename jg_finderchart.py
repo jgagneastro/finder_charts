@@ -430,7 +430,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
         datai = pyfits.getdata(filei)
         medi = np.nanmedian(datai)
         madi = np.nanmedian(abs(datai - np.nanmedian(datai)))
-        devi = np.percentile(datai,95) - np.percentile(datai,5)
+        devi = np.percentile(datai,90) - np.percentile(datai,10)
         meds.append(medi)
         mads.append(madi)
         devs.append(devi)
@@ -450,19 +450,20 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
     aplpy.make_rgb_image('AllWISE_rgb.fits','AllWISE_rgb.png',vmin_r=mins[0],vmin_g=mins[1],vmin_b=mins[2],vmax_r=maxs[0],vmax_g=maxs[1],vmax_b=maxs[2])
     
     imawrgb.show_rgb('AllWISE_rgb.png')
-    #imawrgb.axis('off')
     imawrgb.hide_tick_labels()
     imawrgb.ticks.hide()
     #imawrgb.ticks.set_color('k')
     #imawrgb.ticks.set_minor_frequency(0)
     #imawrgb.ticks.set_xspacing(0.5/60.0)
     #imawrgb.ticks.set_yspacing(0.5/60.0)
-    imawrgb.hide_xaxis_label()
+    #imawrgb.hide_xaxis_label() 
+    imawrgb.axis_labels.set_xtext('Size = '+str(size)+' arcmin')
     imawrgb.hide_yaxis_label()
     imawrgb.recenter(ra,de,width=(2.0/60.0),height=(2.0/60.0))
     imawrgb.show_circles(ra,de,edgecolor='r',linewidth=0.7,facecolor='none',radius=circle_radius)
+    color_blue = [55,126,184]
     if secondary:
-        imawrgb.show_circles(ra2,de2,edgecolor='b',linewidth=0.7,facecolor='none',radius=circle_radius)
+        imawrgb.show_circles(ra2,de2,edgecolor=color_blue,linewidth=0.7,facecolor='none',radius=circle_radius)
     
     #Create and plot RGB PSO image only if there's enough space (vertical_spacing >= 2)
     if PSO and vertical_spacing >= 2:
