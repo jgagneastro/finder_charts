@@ -602,7 +602,7 @@ def oplotfits(fig,fitsfile,nyplot,nxplot,position,ra,de,label,year='',xlabel=0.1
         im.show_circles(ra2,de2,edgecolor='b',linewidth=0.7,facecolor='none',radius=circle_radius)
     im.add_label(xlabel,0.9,label,relative=True,size='medium',color='k',bbox=dict(facecolor='white', alpha=0.5))
     if year:
-        im.add_label(0.15,0.1,year,relative=True,size='medium',color='k')
+        im.add_label(0.15,0.1,year,relative=True,size='medium',color='k',bbox=dict(facecolor='white', alpha=0.5))
     if allwise:
         im.show_circles(allwise_ra,allwise_de,edgecolor='k',facecolor=allcolor,radius=0.0004,linewidth=0.5)
     if rejallwise:
