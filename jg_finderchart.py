@@ -273,9 +273,9 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
                 tmass_ra=tmass_ra,tmass_de=tmass_de,rejtmass_ra=rejtmass_ra,\
                 rejtmass_de=rejtmass_de,circle_radius=circle_radius)
             if primarypos_label:
-                im.add_label(0.01,0.8,primarypos_label,relative=True,size='medium',color='r',horizontalalignment='left')
+                im.add_label(0.03,0.8,primarypos_label,relative=True,size='medium',color='r',horizontalalignment='left')
             if secondary and secondarypos_label:
-                im.add_label(0.01,0.7,secondarypos_label,relative=True,size='medium',color='b',horizontalalignment='left')
+                im.add_label(0.03,0.7,secondarypos_label,relative=True,size='medium',color='b',horizontalalignment='left')
 
         if images[i][1] == 'DSS1 Red':
             oplotfits(fig,'DSS1_Red.fits',nyplot,nxplot,2,ra,de,'DSS1 R',xlabel=0.2,\
@@ -618,7 +618,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
     for i in range(0,len(files)):
         mini = meds[i] - 2.0*mads[i]
         #maxi = meds[i] + 10.0*mads[i]
-        maxi = meds[i] + 5.0*devs[i]
+        maxi = meds[i] + 2.0*devs[i]
         mins.append(mini)
         maxs.append(maxi)
     
