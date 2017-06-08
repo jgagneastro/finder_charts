@@ -13,7 +13,7 @@ from jdcal import *
 import pdb
 import glob
 
-def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False,PSO=True,UKIDSS=True,VHS=True,keepfiles=False,allcolor='#FFFF00',rejcolor='b',tm_color='r',plot=False,savepdf=True,secondary='',addtext='',addtext2='',skipdownloads=False,circle_radius=0.0025,size=2.0,override_directory=None,primarypos_label=None,secondarypos_label=None,title=None):
+def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False,PSO=True,UKIDSS=True,VHS=True,keepfiles=False,allcolor='#FFFF00',rejcolor='b',tm_color='r',plot=False,savepdf=True,secondary='',addtext='',addtext2='',skipdownloads=False,circle_radius=0.0025,size=2.0,override_directory=None,primarypos_label=None,secondarypos_label=None,title=None,filename=None):
     # Set $FINDER_PATH in your bash_profile if you would like to control where the finder charts are output
     # size: arcmin
     # allwise: overplot AllWISE catalog positions
@@ -59,6 +59,8 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
     de2 = None
     if secondary:
         ra2,de2 = simbad(secondary)
+    if filename is None:
+        filename = source_name
     
     #Download xml file from IRSA
     xmlfile = "source.xml"
@@ -612,7 +614,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
             cmdrm4 = "rm tmass.tbl"
             os.system(cmdrm4)
     if savepdf:
-        pylab.savefig(source_name+'.pdf')
+        pylab.savefig(filename+'.pdf')
     
     #Return to initial directory
     if main_dir:
