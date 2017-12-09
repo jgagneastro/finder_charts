@@ -17,7 +17,7 @@ def query_pso_fits(ra,dec,size=10.0,output_file='PSO_TMP.fits'):
 	noutlist = np.size(outlist)
 	URL_list = []
 	bands_list = []
-	for i in range(0L,noutlist):
+	for i in range(0,noutlist):
 		posi = outlist[i].find('href="')
 		if posi == -1:
 			continue
@@ -32,7 +32,7 @@ def query_pso_fits(ra,dec,size=10.0,output_file='PSO_TMP.fits'):
 	
 	#Download fits images
 	nURL = np.size(URL_list)
-	for i in range(0L,nURL):
+	for i in range(0,nURL):
 		sub_curl = 'curl -o '+bands_list[i]+'_'+output_file+' -X POST -d "'+URL_list[i].split("?")[1]+'" http:'+URL_list[i].split("?")[0]
 		print "Downloading band "+bands_list[i]+": "+bands_list[i]+'_'+output_file
 		sub_proc = subprocess.Popen([sub_curl], stdout=subprocess.PIPE,shell=True)
