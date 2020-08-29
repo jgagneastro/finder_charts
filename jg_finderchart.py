@@ -11,6 +11,7 @@ from PIL import Image
 from query_wsa_fits import *
 from query_pso_fits import *
 from query_des_fits import *
+from query_uhs_fits import *
 from jdcal import *
 import pdb
 import glob
@@ -19,7 +20,7 @@ import astropy.io.fits as pyfits
 #import astropy.io.fits as aplpy
 stop=pdb.set_trace
 
-def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False,PSO=True,UKIDSS=True,VHS=True,DES=True,keepfiles=False,allcolor='#FFFF00',rejcolor='b',tm_color='r',plot=False,savepdf=True,secondary='',addtext='',addtext2='',skipdownloads=False,circle_radius=0.0025,size=1.667,override_directory=None,primarypos_label=None,secondarypos_label=None,title=None,filename=None,buffer=False,gnirsacq=False,DSS=True,TMASSIM=True,WISE=True,circle_alpha=.8,labels=True,pos_list_gray_ra=None,pos_list_gray_dec=None,pos_list_gray_sizes=None,pos_list_gray_pmra=None,pos_list_gray_pmdec=None,gray_label=None,pos3=None,pos3_label=None,pos4=None,pos4_label=None,pos5=None,pos5_label=None):
+def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False,PSO=True,UKIDSS=True,VHS=True,DES=True,UHS=True,keepfiles=False,allcolor='#FFFF00',rejcolor='b',tm_color='r',plot=False,savepdf=True,secondary='',addtext='',addtext2='',skipdownloads=False,circle_radius=0.0025,size=1.667,override_directory=None,primarypos_label=None,secondarypos_label=None,title=None,filename=None,buffer=False,gnirsacq=False,DSS=True,TMASSIM=True,WISE=True,circle_alpha=.8,labels=True,pos_list_gray_ra=None,pos_list_gray_dec=None,pos_list_gray_sizes=None,pos_list_gray_pmra=None,pos_list_gray_pmdec=None,gray_label=None,pos3=None,pos3_label=None,pos4=None,pos4_label=None,pos5=None,pos5_label=None):
 	# Set $FINDER_PATH in your bash_profile if you would like to control where the finder charts are output
 	# size: arcmin
 	# allwise: overplot AllWISE catalog positions
@@ -200,14 +201,13 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
 			#Remove previous data
 			os.system("rm *_DES_TMP.fits*")
 			query_des_fits(ra,de,size=size,output_file='DES_TMP.fits')
-			#from astropy.coordinates import SkyCoord
-			#from hips import WCSGeometry
-			#from hips import make_sky_image
 
-			#geometry = WCSGeometry.create(skydir=SkyCoord(82.418457, -46.987488, unit='deg', frame='icrs'),width=500, height=500, fov="0.03 deg",coordsys='icrs', projection='AIT')
-			#hips_survey = 'CDS/P/DES-DR1/Y'
-			#result = make_sky_image(geometry, hips_survey, 'fits')
-			#result.write_image('my_image3.fits')
+		if UHS:
+			print("Downloading UHS DR1 data")
+			#Remove previous data
+			os.system("rm *_UHS_TMP.fits*")
+			query_uhs_fits(ra,de,size=size,output_file='UHS_TMP.fits')
+			
 	
 	#If no UKIDSS data could be downloaded, turn off the UKIDSS option
 	if len(glob.glob('*_UKIDSS_TMP.fits*')) == 0:
@@ -221,9 +221,16 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
 	if len(glob.glob('*_PSO_TMP.fits*')) == 0:
 		PSO = False
 	
+	if len(glob.glob('*_DES_TMP.fits*')) == 0:
+		DES = False
+
+	if len(glob.glob('*_UHS_TMP.fits*')) == 0:
+		UHS = False
+
 	if PSO or DES:
 		nxplot = np.maximum(nxplot,5)
-	if UKIDSS:
+
+	if UKIDSS or UHS:
 		nxplot = np.maximum(nxplot,4)
 	
 	#Determine the amount of additional rows needed
@@ -239,7 +246,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
 		vhs_spacing += 1
 		tmass_spacing += 1
 		allwise_spacing += 1
-	if UKIDSS:
+	if UKIDSS or UHS:
 		vertical_spacing += 1
 		vhs_spacing += 1
 		tmass_spacing += 1
@@ -605,6 +612,19 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
 		except:
 			pass
 	
+	# Plot UHS images
+	if UHS:
+		try:#J band
+			#Get date and then make plot
+			fitsfile = 'J_UHS_TMP.fits.gz'
+			#hdulist = pyfits.open(fitsfile)
+			#year = hdulist[0].header['UTDATE'][0:4]
+			#hdulist.close()
+			year = " "
+			oplotfits(fig,fitsfile,nyplot,nxplot,nxplot+2+ukidss_spacing*nxplot+dss_negspacing*nxplot,ra,de,'UHS J',year=year,ra2=ra2,de2=de2,north=True,hdu=1,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius,size=size,buffer=buffer,gnirsacq=gnirsacq,circle_alpha=circle_alpha,ra3=ra3,de3=de3,ra4=ra4,de4=de4,ra5=ra5,de5=de5)
+		except:
+			pass
+
 	# Plot VHS images
 	if VHS:
 		try:#Y band
@@ -837,7 +857,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
 		pass
 	else:
 		print("Removing files...")
-		cmdrm1 = "rm source.xml 2MASS*.fits AllWISE*.fits DSS*.fits AllWISE_rgb.png *UKIDSS_TMP.fits.gz *VHS_TMP.fits.gz *PSO_TMP.fits* UKIDSS_rgb*.fits UKIDSS_rgb.png PSO_rgb.png PSO_rgb*.fits DES_rgb.png DES_rgb*.fits"
+		cmdrm1 = "rm source.xml 2MASS*.fits AllWISE*.fits DSS*.fits AllWISE_rgb.png *UKIDSS_TMP.fits.gz *VHS_TMP.fits.gz *PSO_TMP.fits* *DES_TMP.fits* *UHS_TMP.fits* UKIDSS_rgb*.fits UKIDSS_rgb.png PSO_rgb.png PSO_rgb*.fits DES_rgb.png DES_rgb*.fits"
 		os.system(cmdrm1)
 		if allwise:
 			cmdrm2 = "rm allwise.tbl"

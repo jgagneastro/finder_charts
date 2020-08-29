@@ -9,7 +9,7 @@ def query_wsa_fits(ra,dec,size=10.0,catalog='UKIDSS',output_file='',filter='all'
     #Determine query appropriate for catalog
 	if catalog=='UKIDSS':
 	    #Just Added &obsType=object
-	    curl = 'curl -X POST -d "ra='+str(ra)+'&dec='+str(dec)+'&filterID='+filter+'&sys=J2000&xsize='+str(size)+'&ysize='+str(size)+'&obsType=object&frameType=stack&database=UKIDSSDR10PLUS&programmeID=all&submit=Submit" http://wsa.roe.ac.uk:8080/wsa/GetImage'
+	    curl = 'curl -X POST -d "ra='+str(ra)+'&dec='+str(dec)+'&filterID='+filter+'&sys=J2000&xsize='+str(size)+'&ysize='+str(size)+'&obsType=object&frameType=stack&database=UKIDSSDR11PLUS&programmeID=all&submit=Submit" http://wsa.roe.ac.uk:8080/wsa/GetImage'
 	if catalog=='VHS':
 	    curl = 'curl -X POST -d "database=VHSDR6&programmeID=110&ra='+str(ra)+'&dec='+str(dec)+'&sys=J&filterID='+filter+'&xsize='+str(size)+'&ysize='+str(size)+'&obsType=object&frameType=tilestack&mfid=&fsid=&archive=VSA" http://horus.roe.ac.uk:8080/vdfs/GetImage'
 #   if output_file=='':
