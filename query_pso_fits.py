@@ -7,13 +7,13 @@ import pdb
 def query_pso_fits(ra,dec,size=10.0,output_file='PSO_TMP.fits'):
 	
 	curl = 'curl -X POST -d "pos='+str(ra)+'+'+str(dec)+'&filter=color&filter=g&filter=r&filter=i&filter=z&filter=y&filetypes=stack&auxiliary=data&size='+str(int(round(size*4*60)))+'&output_size=0&verbose=0&autoscale=99.500000&catlist=&submit=Submit" http://ps1images.stsci.edu/cgi-bin/ps1cutouts'
-    
-    #Send initial query to STSCI
+	
+	#Send initial query to STSCI
 	proc = subprocess.Popen([curl], stdout=subprocess.PIPE,shell=True)
 	(out, err) = proc.communicate()
 	
 	#Split string in a list and search for fits image URLs & band names
-	outlist = out.split('\n')
+	outlist = out.decode().split('\n')
 	noutlist = np.size(outlist)
 	URL_list = []
 	bands_list = []

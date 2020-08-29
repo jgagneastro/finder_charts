@@ -10,6 +10,7 @@ from datetime import *
 from PIL import Image
 from query_wsa_fits import *
 from query_pso_fits import *
+from query_des_fits import *
 from jdcal import *
 import pdb
 import glob
@@ -49,7 +50,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
 		proc = subprocess.Popen(["echo $FINDER_PATH"], stdout=subprocess.PIPE,shell=True)
 		(out, err) = proc.communicate()
 		if out != '\n':
-			main_dir = out.split('\n')[0]
+			main_dir = out.decode().split('\n')[0]
 	if main_dir:
 		initial_dir = os.getcwd()
 		if not os.path.exists(main_dir):
@@ -220,7 +221,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
 	if len(glob.glob('*_PSO_TMP.fits*')) == 0:
 		PSO = False
 	
-	if PSO:
+	if PSO or DES:
 		nxplot = np.maximum(nxplot,5)
 	if UKIDSS:
 		nxplot = np.maximum(nxplot,4)
@@ -232,7 +233,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
 	tmass_spacing = 0
 	allwise_spacing = 1
 	dss_negspacing = 0
-	if PSO:
+	if PSO or DES:
 		vertical_spacing += 1
 		ukidss_spacing += 1
 		vhs_spacing += 1
@@ -335,7 +336,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
 		if images[i][1] == 'DSS2 Blue' and DSS:
 			min1, max1, im = oplotfits(fig,'DSS2_Blue.fits',nyplot,nxplot,3,ra,de,'DSS2 B',year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius,size=size,buffer=buffer,gnirsacq=gnirsacq,circle_alpha=circle_alpha,ra3=ra3,de3=de3,ra4=ra4,de4=de4,ra5=ra5,de5=de5)
 			if title:
-				im.show_xaxis_label()
+				im.axis_labels.show()
 				im.axis_labels.set_xposition('top')
 				im.axis_labels.set_xtext(title)
 	
@@ -377,8 +378,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
 			void1, void2, im = oplotfits(fig,'2MASS_J.fits',nyplot,nxplot,nxplot+1+tmass_spacing*nxplot+dss_negspacing*nxplot,ra,de,'2MASS $J$',year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,rejtmass_ra=rejtmass_ra_sub,rejtmass_de=rejtmass_de_sub,rejtmass_sizes=rejtmass_sizes_sub,rejtmass_pmra=rejtmass_pmra_sub,rejtmass_pmde=rejtmass_pmde_sub,circle_radius=circle_radius,size=size,rejtmass_rel=rejtmass_rel_sub,gnirsacq=gnirsacq,circle_alpha=circle_alpha,ra3=ra3,de3=de3,ra4=ra4,de4=de4,ra5=ra5,de5=de5)
 			
 			if not WISE:
-				im.show_xaxis_label()
-				im.show_yaxis_label()
+				im.axis_labels.show()
 				im.axis_labels.set_xtext('RA (East left)')
 				im.axis_labels.set_ytext('Dec (North up)')
 		
@@ -436,8 +436,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
 		
 		if images[i][1] == 'w1' and WISE:
 			wmin1, wmax1, im = oplotfits(fig,'AllWISE_w1.fits',nyplot,nxplot,nxplot+1+allwise_spacing*nxplot+dss_negspacing*nxplot,ra,de,'W1',year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius,size=size,buffer=buffer,gnirsacq=gnirsacq,circle_alpha=circle_alpha,ra3=ra3,de3=de3,ra4=ra4,de4=de4,ra5=ra5,de5=de5)
-			im.show_xaxis_label()
-			im.show_yaxis_label()
+			im.axis_labels.show()
 			im.axis_labels.set_xtext('RA (East left)')
 			im.axis_labels.set_ytext('Dec (North up)')
 
@@ -508,6 +507,65 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
 		except:
 			pass
 	
+	# Plot DES images
+	if (DES and not PSO):
+		year = '2013-2016'
+		try:#g band
+			#Get date and then make plot
+			fitsfile = 'g_DES_TMP.fits'
+			#hdulist = pyfits.open(fitsfile)
+			#jd = hdulist[0].header['MJD-OBS']
+			#hdulist.close()
+			#gregdate = jd2gcal(2400000.5, jd)
+			#year = '{0:.0f}'.format(gregdate[0]+gregdate[1]/12.0)
+			wminpsog, wmaxpsog, void = oplotfits(fig,fitsfile,nyplot,nxplot,nxplot+1+dss_negspacing*nxplot,ra,de,'DES $g$',year=year,ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius,size=size,buffer=buffer,gnirsacq=gnirsacq,circle_alpha=circle_alpha,ra3=ra3,de3=de3,ra4=ra4,de4=de4,ra5=ra5,de5=de5)
+		except:
+			pass
+		try:#r band
+			#Get date and then make plot
+			fitsfile = 'r_DES_TMP.fits'
+			#hdulist = pyfits.open(fitsfile)
+			#jd = hdulist[0].header['MJD-OBS']
+			#hdulist.close()
+			#gregdate = jd2gcal(2400000.5, jd)
+			#year = '{0:.0f}'.format(gregdate[0]+gregdate[1]/12.0)
+			wminpsor, wmaxpsor, void = oplotfits(fig,fitsfile,nyplot,nxplot,nxplot+2+dss_negspacing*nxplot,ra,de,'DES $r$',year=year,ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius,size=size,buffer=buffer,gnirsacq=gnirsacq,circle_alpha=circle_alpha,ra3=ra3,de3=de3,ra4=ra4,de4=de4,ra5=ra5,de5=de5)
+		except:
+			pass
+		try:#i band
+			#Get date and then make plot
+			fitsfile = 'i_DES_TMP.fits'
+			#hdulist = pyfits.open(fitsfile)
+			#jd = hdulist[0].header['MJD-OBS']
+			#hdulist.close()
+			#gregdate = jd2gcal(2400000.5, jd)
+			#year = '{0:.0f}'.format(gregdate[0]+gregdate[1]/12.0)
+			wminpsoi, wmaxpsoi, void = oplotfits(fig,fitsfile,nyplot,nxplot,nxplot+3+dss_negspacing*nxplot,ra,de,'DES $i$',year=year,ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius,size=size,buffer=buffer,gnirsacq=gnirsacq,circle_alpha=circle_alpha,ra3=ra3,de3=de3,ra4=ra4,de4=de4,ra5=ra5,de5=de5)
+		except:
+			pass
+		try:#z band
+			#Get date and then make plot
+			fitsfile = 'z_DES_TMP.fits'
+			#hdulist = pyfits.open(fitsfile)
+			#jd = hdulist[0].header['MJD-OBS']
+			#hdulist.close()
+			#gregdate = jd2gcal(2400000.5, jd)
+			#year = '{0:.0f}'.format(gregdate[0]+gregdate[1]/12.0)
+			wminpsoz, wmaxpsoz, void = oplotfits(fig,fitsfile,nyplot,nxplot,nxplot+4+dss_negspacing*nxplot,ra,de,'DES $z$',year=year,ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius,size=size,buffer=buffer,gnirsacq=gnirsacq,circle_alpha=circle_alpha,ra3=ra3,de3=de3,ra4=ra4,de4=de4,ra5=ra5,de5=de5)
+		except:
+			pass
+		try:#y band
+			#Get date and then make plot
+			fitsfile = 'Y_DES_TMP.fits'
+			#hdulist = pyfits.open(fitsfile)
+			#jd = hdulist[0].header['MJD-OBS']
+			#hdulist.close()
+			#gregdate = jd2gcal(2400000.5, jd)
+			#year = '{0:.0f}'.format(gregdate[0]+gregdate[1]/12.0)
+			wminpsoy, wmaxpsoy, void = oplotfits(fig,fitsfile,nyplot,nxplot,nxplot+5+dss_negspacing*nxplot,ra,de,'DES $Y$',year=year,ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius,size=size,buffer=buffer,gnirsacq=gnirsacq,circle_alpha=circle_alpha,ra3=ra3,de3=de3,ra4=ra4,de4=de4,ra5=ra5,de5=de5)
+		except:
+			pass
+
 	# Plot UKIDSS images
 	if UKIDSS:
 		try:#Y band
@@ -618,8 +676,10 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
 			aplpy.make_rgb_image('AllWISE_rgb.fits','AllWISE_rgb.png',vmin_r=mins[0],vmin_g=mins[1],vmin_b=mins[2],vmax_r=maxs[0],vmax_g=maxs[1],vmax_b=maxs[2])
 			
 			imawrgb.show_rgb('AllWISE_rgb.png')
-			imawrgb.hide_tick_labels()
+			imawrgb.tick_labels.hide()
 			imawrgb.ticks.hide()
+			
+
 			imawrgb.axis_labels.set_xtext('Size = '+str(size)+' arcmin')
 			imawrgb.hide_yaxis_label()
 			imawrgb.recenter(ra,de,width=(size/60.0),height=(size/60.0))
@@ -663,7 +723,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
 			#aplpy.make_rgb_image('PSO_rgb.fits','PSO_rgb.png')
 			
 			impsoc.show_rgb('PSO_rgb.png')
-			impsoc.hide_tick_labels()
+			impsoc.tick_labels.hide()
 			impsoc.ticks.hide()
 			impsoc.hide_xaxis_label()
 			impsoc.hide_yaxis_label()
@@ -674,6 +734,48 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
 		except:
 			pass
 	
+	if DES and not PSO and vertical_spacing >= 2:
+		try:
+			files = ['Y_DES_TMP.fits','i_DES_TMP.fits','g_DES_TMP.fits']
+			aplpy.make_rgb_cube(files,'DES_rgb.fits')
+			impsoc = aplpy.FITSFigure('DES_rgb_2d.fits',figure=fig,subplot=(nyplot,nxplot,nxplot+10+dss_negspacing*nxplot))
+			impsoc.add_label(0.05,0.9,'DES $Y$/$i$/$g$',relative=True,size='medium',color='k',bbox=dict(facecolor='white', alpha=0.5),horizontalalignment='left')
+
+			meds = []
+			mads = []
+			devs = []
+			for filei in files:
+				datai = pyfits.getdata(filei)
+				medi = np.nanmedian(datai)
+				madi = np.nanmedian(abs(datai - np.nanmedian(datai)))
+				devi = np.nanpercentile(datai,95) - np.nanpercentile(datai,5)
+				meds.append(medi)
+				mads.append(madi)
+				devs.append(devi)
+			
+			mins = []
+			maxs = []
+			for i in range(0,len(files)):
+				mini = (meds[i] - 2.0*mads[i])
+				#maxi = (meds[i] + 10.0*mads[i])
+				maxi = meds[i] + 2.0*devs[i]
+				mins.append(mini)
+				maxs.append(maxi)
+			
+			aplpy.make_rgb_image('DES_rgb.fits','DES_rgb.png',vmin_r=mins[0],vmin_g=mins[1],vmin_b=mins[2],vmax_r=maxs[0],vmax_g=maxs[1],vmax_b=maxs[2])
+			
+			impsoc.show_rgb('DES_rgb.png')
+			impsoc.tick_labels.hide()
+			impsoc.ticks.hide()
+			impsoc.hide_xaxis_label()
+			impsoc.hide_yaxis_label()
+			impsoc.recenter(ra,de,width=(size/60.0),height=(size/60.0))
+			impsoc.show_circles(ra,de,edgecolor=color_red,linewidth=circle_width,facecolor='none',radius=circle_radius,alpha=circle_alpha)
+			if secondary:
+				impsoc.show_circles(ra2,de2,edgecolor=color_blue,linewidth=circle_width,facecolor='none',	radius=circle_radius,alpha=circle_alpha)
+		except:
+			pass
+
 	bottom_space = 0.05
 	top_space = 0.05
 	pylab.subplots_adjust(left=0.05,right=0.95,bottom=bottom_space,top=1.0-top_space,wspace=0.05,hspace=0.05)
@@ -783,10 +885,9 @@ def oplotfits(fig,fitsfile,nyplot,nxplot,position,ra,de,label,year='',xlabel=0.0
 	im = aplpy.FITSFigure(fitsfile,figure=fig,subplot=(nyplot,nxplot,position),north=north,hdu=hdu)
 
 	#Hide ticks and labels
-	im.hide_tick_labels()
+	im.tick_labels.hide()
 	im.ticks.hide()
-	im.hide_xaxis_label()
-	im.hide_yaxis_label()
+	im.axis_labels.hide()
 	
 	#Read the FITS data in order to determine appropriate scaling
 	data1 = pyfits.getdata(fitsfile)

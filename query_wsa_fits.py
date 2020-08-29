@@ -19,11 +19,11 @@ def query_wsa_fits(ra,dec,size=10.0,catalog='UKIDSS',output_file='',filter='all'
 	(out, err) = proc.communicate()
 	
 	#Split string in a list and search for fits image URLs & band names
-	outlist = out.split('\n')
+	outlist = out.decode().split('\n')
 	noutlist = np.size(outlist)
 	URL_list = []
 	bands_list = []
-	for i in range(0L,noutlist):
+	for i in range(0,noutlist):
 		posi = outlist[i].find('href="')
 		if posi == -1:
 			continue
@@ -39,11 +39,11 @@ def query_wsa_fits(ra,dec,size=10.0,catalog='UKIDSS',output_file='',filter='all'
 	
 	#Download fits images
 	nURL = np.size(URL_list)
-	for i in range(0L,nURL):
+	for i in range(0,nURL):
 		sub_curl = 'curl -X POST -d "'+URL_list[i].split("?")[1]+'" '+URL_list[i].split("?")[0]
 		sub_proc = subprocess.Popen([sub_curl], stdout=subprocess.PIPE,shell=True)
 		(sub_out, sub_err) = sub_proc.communicate()
-		sub_URL = sub_out.split('href="')[1].split('"')[0]
+		sub_URL = sub_out.decode().split('href="')[1].split('"')[0]
 		print("Downloading band "+bands_list[i]+": "+bands_list[i]+'_'+output_file)
 		sub_curl2 = 'curl -o '+bands_list[i]+'_'+output_file+' -X POST -d "'+sub_URL.split("?")[1]+'" '+sub_URL.split("?")[0]
 		sub_proc2 = subprocess.Popen([sub_curl2], stdout=subprocess.PIPE,shell=True)
