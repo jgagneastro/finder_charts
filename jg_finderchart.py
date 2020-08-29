@@ -678,8 +678,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
 			imawrgb.show_rgb('AllWISE_rgb.png')
 			imawrgb.tick_labels.hide()
 			imawrgb.ticks.hide()
-			
-
+			imawrgb.axis_labels.set_ytext(' ')
 			imawrgb.axis_labels.set_xtext('Size = '+str(size)+' arcmin')
 			imawrgb.hide_yaxis_label()
 			imawrgb.recenter(ra,de,width=(size/60.0),height=(size/60.0))
@@ -725,8 +724,8 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
 			impsoc.show_rgb('PSO_rgb.png')
 			impsoc.tick_labels.hide()
 			impsoc.ticks.hide()
-			impsoc.hide_xaxis_label()
-			impsoc.hide_yaxis_label()
+			impsoc.axis_labels.hide()
+			circle_width = 1.2
 			impsoc.recenter(ra,de,width=(size/60.0),height=(size/60.0))
 			impsoc.show_circles(ra,de,edgecolor=color_red,linewidth=circle_width,facecolor='none',radius=circle_radius,alpha=circle_alpha)
 			if secondary:
@@ -767,8 +766,8 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
 			impsoc.show_rgb('DES_rgb.png')
 			impsoc.tick_labels.hide()
 			impsoc.ticks.hide()
-			impsoc.hide_xaxis_label()
-			impsoc.hide_yaxis_label()
+			impsoc.axis_labels.hide()
+			circle_width = 1.2
 			impsoc.recenter(ra,de,width=(size/60.0),height=(size/60.0))
 			impsoc.show_circles(ra,de,edgecolor=color_red,linewidth=circle_width,facecolor='none',radius=circle_radius,alpha=circle_alpha)
 			if secondary:
@@ -838,7 +837,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
 		pass
 	else:
 		print("Removing files...")
-		cmdrm1 = "rm source.xml 2MASS*.fits AllWISE*.fits DSS*.fits AllWISE_rgb.png *UKIDSS_TMP.fits.gz *VHS_TMP.fits.gz *PSO_TMP.fits* UKIDSS_rgb*.fits UKIDSS_rgb.png PSO_rgb.png PSO_rgb*.fits"
+		cmdrm1 = "rm source.xml 2MASS*.fits AllWISE*.fits DSS*.fits AllWISE_rgb.png *UKIDSS_TMP.fits.gz *VHS_TMP.fits.gz *PSO_TMP.fits* UKIDSS_rgb*.fits UKIDSS_rgb.png PSO_rgb.png PSO_rgb*.fits DES_rgb.png DES_rgb*.fits"
 		os.system(cmdrm1)
 		if allwise:
 			cmdrm2 = "rm allwise.tbl"
