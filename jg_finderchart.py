@@ -195,14 +195,14 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
 			query_pso_fits(ra,de,size=size,output_file='PSO_TMP.fits')
 
 		if DES:
-			from astropy.coordinates import SkyCoord
-			from hips import WCSGeometry
-			from hips import make_sky_image
+			# from astropy.coordinates import SkyCoord
+			# from hips import WCSGeometry
+			# from hips import make_sky_image
 
-geometry = WCSGeometry.create(skydir=SkyCoord(82.418457, -46.987488, unit='deg', frame='icrs'),width=500, height=500, fov="0.03 deg",coordsys='icrs', projection='AIT')
-hips_survey = 'CDS/P/DES-DR1/Y'
-result = make_sky_image(geometry, hips_survey, 'fits')
-result.write_image('my_image3.fits')
+			# geometry = WCSGeometry.create(skydir=SkyCoord(82.418457, -46.987488, unit='deg', frame='icrs'),width=500, height=500, fov="0.03 deg",coordsys='icrs', projection='AIT')
+			# hips_survey = 'CDS/P/DES-DR1/Y'
+			# result = make_sky_image(geometry, hips_survey, 'fits')
+			# result.write_image('my_image3.fits')
 
 	
 	#If no UKIDSS data could be downloaded, turn off the UKIDSS option
