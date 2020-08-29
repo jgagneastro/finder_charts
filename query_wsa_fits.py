@@ -44,7 +44,7 @@ def query_wsa_fits(ra,dec,size=10.0,catalog='UKIDSS',output_file='',filter='all'
 		sub_proc = subprocess.Popen([sub_curl], stdout=subprocess.PIPE,shell=True)
 		(sub_out, sub_err) = sub_proc.communicate()
 		sub_URL = sub_out.split('href="')[1].split('"')[0]
-		print "Downloading band "+bands_list[i]+": "+bands_list[i]+'_'+output_file
+		print("Downloading band "+bands_list[i]+": "+bands_list[i]+'_'+output_file)
 		sub_curl2 = 'curl -o '+bands_list[i]+'_'+output_file+' -X POST -d "'+sub_URL.split("?")[1]+'" '+sub_URL.split("?")[0]
 		sub_proc2 = subprocess.Popen([sub_curl2], stdout=subprocess.PIPE,shell=True)
 		(sub_out2, sub_err2) = sub_proc2.communicate()

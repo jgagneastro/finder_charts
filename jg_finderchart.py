@@ -98,12 +98,12 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
 	#Download xml file from IRSA
 	xmlfile = "source.xml"
 	if skipdownloads is not True:
-		print "Getting xml file..."
+		print("Getting xml file...")
 		cmd = "wget -O "+xmlfile+" 'http://irsa.ipac.caltech.edu/applications/finderchart/servlet/api?locstr="+str(ra)+"+"+str(de)+"&subsetsize="+str(size)+"' "
 		os.system(cmd)
 	
 	# parse xml file
-	print "Parsing xml file..."
+	print("Parsing xml file...")
 	
 	tree = ET.parse(xmlfile)
 	root = tree.getroot()
@@ -129,7 +129,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
 	
 	if skipdownloads is not True:
 		if DSS:
-			print "Downloading DSS data..."
+			print("Downloading DSS data...")
 			for i in range(len(images)):
 				if images[i][1] == 'DSS1 Blue':
 					cmd1 = "wget -O DSS1_Blue.fits '"+images[i][3]+"'"
@@ -148,7 +148,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
 					os.system(cmd1)
 		
 		if TMASSIM:
-			print "Downloading 2MASS data..."
+			print("Downloading 2MASS data...")
 			for i in range(len(images)):
 				if images[i][1] == 'J':
 					cmd1 = "wget -O 2MASS_J.fits '"+images[i][3]+"'"
@@ -161,7 +161,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
 					os.system(cmd1)
 		
 		if WISE:
-			print "Downloading WISE data"
+			print("Downloading WISE data")
 			for i in range(len(images)):
 				if images[i][1] == 'w1':
 					cmd1 = "wget -O AllWISE_w1.fits '"+images[i][3]+"'"
@@ -177,27 +177,27 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
 					os.system(cmd1)
 		
 		if UKIDSS:
-			print "Downloading UKIDSS data"
+			print("Downloading UKIDSS data")
 			#Remove previous data
 			os.system("rm *_UKIDSS_TMP.fits.gz")
 			query_wsa_fits(ra,de,size=size,output_file='UKIDSS_TMP.fits.gz',filter='all',catalog='UKIDSS')
 		
 		if VHS:
-			print "Downloading VHS data"
+			print("Downloading VHS data")
 			#Remove previous data
 			os.system("rm *_VHS_TMP.fits.gz")
 			query_wsa_fits(ra,de,size=size,output_file='VHS_TMP.fits.gz',filter='all',catalog='VHS')
 		
 		if PSO:
-			print "Downloading Pan-Starrs data"
+			print("Downloading Pan-Starrs data")
 			#Remove previous data
 			os.system("rm *_PSO_TMP.fits*")
 			query_pso_fits(ra,de,size=size,output_file='PSO_TMP.fits')
 
-		# if DES:
-		# 	from astropy.coordinates import SkyCoord
-		# 	from hips import WCSGeometry
-		# 	from hips import make_sky_image
+		if DES:
+			from astropy.coordinates import SkyCoord
+			from hips import WCSGeometry
+			from hips import make_sky_image
 
 geometry = WCSGeometry.create(skydir=SkyCoord(82.418457, -46.987488, unit='deg', frame='icrs'),width=500, height=500, fov="0.03 deg",coordsys='icrs', projection='AIT')
 hips_survey = 'CDS/P/DES-DR1/Y'
@@ -269,7 +269,7 @@ result.write_image('my_image3.fits')
 			awise = np.loadtxt('allwise.tbl',skiprows=27,unpack=True,usecols=(0,1))
 			allwise_ra,allwise_de = awise
 		except:
-			print "No AllWISE sources found!"
+			print("No AllWISE sources found!")
 			allwise=False
 	
 	rejallwise_ra = None
@@ -282,7 +282,7 @@ result.write_image('my_image3.fits')
 			rejawise = np.loadtxt('rejallwise.tbl',skiprows=27,unpack=True,usecols=(0,1))
 			rejallwise_ra,rejallwise_de = rejawise
 		except:
-			print "No AllWISE Reject sources found!"
+			print("No AllWISE Reject sources found!")
 			rejallwise=False
 	
 	tmass_ra = None
@@ -295,7 +295,7 @@ result.write_image('my_image3.fits')
 			tmass_psc = np.loadtxt('tmass.tbl',skiprows=37,unpack=True,usecols=(0,1))
 			tmass_ra,tmass_de = tmass_psc
 		except:
-			print "No 2MASS sources found!"
+			print("No 2MASS sources found!")
 			tmass=False
 	
 	rejtmass_ra = None
@@ -314,7 +314,7 @@ result.write_image('my_image3.fits')
 			rejtmass_ra,rejtmass_de = rejtmass_psc
 			rejtmass_rel,rejtmass_ph = rejtmass_psc2
 		except:
-			print "No 2MASS-Reject sources found!"
+			print("No 2MASS-Reject sources found!")
 			rejtmass=False
 	
 	if plot:
@@ -732,7 +732,7 @@ result.write_image('my_image3.fits')
 	if keepfiles:
 		pass
 	else:
-		print "Removing files..."
+		print("Removing files...")
 		cmdrm1 = "rm source.xml 2MASS*.fits AllWISE*.fits DSS*.fits AllWISE_rgb.png *UKIDSS_TMP.fits.gz *VHS_TMP.fits.gz *PSO_TMP.fits* UKIDSS_rgb*.fits UKIDSS_rgb.png PSO_rgb.png PSO_rgb*.fits"
 		os.system(cmdrm1)
 		if allwise:
@@ -753,7 +753,7 @@ result.write_image('my_image3.fits')
 	
 	t2 = datetime.now()
 	tdiff = (t2 - t1)
-	print "Finder creation took %s seconds" % (round(tdiff.total_seconds(),0))
+	print("Finder creation took %s seconds" % (round(tdiff.total_seconds(),0)))
 
 #This function displays a fits image with the appropriate annotations
 def oplotfits(fig,fitsfile,nyplot,nxplot,position,ra,de,label,year='',xlabel=0.05,ra2=None,de2=None,north=False,hdu=0,allwise=False,rejallwise=False,tmass=False,allcolor='#FFFF00',rejcolor='b',tm_color='r',secondary='',allwise_ra=None,allwise_de=None,rejallwise_ra=None,rejallwise_de=None,tmass_ra=None,tmass_de=None,rejtmass_ra=None,rejtmass_de=None,rejtmass_sizes=None,rejtmass_pmra=None,rejtmass_pmde=None,circle_radius=0.0025,size=2.0,rejtmass_rel=None,buffer=False,gnirsacq=False,circle_alpha=0.8,ra3=None,de3=None,ra4=None,de4=None,ra5=None,de5=None):

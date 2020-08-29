@@ -10,7 +10,7 @@ def simbad( source_name=None, verbose=False ):
     from numpy import float
 
     if source_name==None:
-       print "Missing source name...."
+       print("Missing source name....")
        return None
     
     try:
@@ -24,7 +24,7 @@ def simbad( source_name=None, verbose=False ):
     	url ='http://cds.u-strasbg.fr/cgi-bin/nph-sesame/-ox?'
     	url += quote(source_name)   
     	
-    	if verbose: print url
+    	if verbose: print(url)
 
     	res = urlopen(Request( url ))
     	xml = parse(res)

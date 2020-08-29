@@ -34,6 +34,6 @@ def query_pso_fits(ra,dec,size=10.0,output_file='PSO_TMP.fits'):
 	nURL = np.size(URL_list)
 	for i in range(0,nURL):
 		sub_curl = 'curl -o '+bands_list[i]+'_'+output_file+' -X POST -d "'+URL_list[i].split("?")[1]+'" http:'+URL_list[i].split("?")[0]
-		print "Downloading band "+bands_list[i]+": "+bands_list[i]+'_'+output_file
+		print("Downloading band "+bands_list[i]+": "+bands_list[i]+'_'+output_file)
 		sub_proc = subprocess.Popen([sub_curl], stdout=subprocess.PIPE,shell=True)
 		(sub_out, sub_err) = sub_proc.communicate()

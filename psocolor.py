@@ -85,14 +85,14 @@ def psocolor(source_name,keepfiles=False,allcolor='#FFFF00',rejcolor='b',tm_colo
         filename = source_name
     
     if skipdownloads is not True:
-        print "Downloading Pan-Starrs data"
+        print("Downloading Pan-Starrs data")
         #Remove previous data
         os.system("rm *_PSO_TMP.fits*")
         query_pso_fits(ra,de,size=size,output_file='PSO_TMP.fits')
     
     #If no PSO data could be downloaded, return
     if len(glob.glob('*_PSO_TMP.fits*')) == 0:
-        print(' No PSO data !')
+        print("No PSO data !")
         return
     
     if plot:
@@ -143,7 +143,7 @@ def psocolor(source_name,keepfiles=False,allcolor='#FFFF00',rejcolor='b',tm_colo
     if keepfiles:
         pass
     else:
-        print "Removing files..."
+        print("Removing files...")
         cmdrm1 = "rm PSO_rgb.png PSO_rgb*.fits"
         os.system(cmdrm1)
     if savepdf:
@@ -155,4 +155,4 @@ def psocolor(source_name,keepfiles=False,allcolor='#FFFF00',rejcolor='b',tm_colo
     
     t2 = datetime.now()
     tdiff = (t2 - t1)
-    print "PSO image creation took %s seconds" % (round(tdiff.total_seconds(),0))
+    print("PSO image creation took %s seconds" % (round(tdiff.total_seconds(),0)))
