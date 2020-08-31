@@ -206,13 +206,17 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
 			print("Downloading UHS DR1 data")
 			#Remove previous data
 			os.system("rm *_UHS_TMP.fits*")
-			query_uhs_fits(ra,de,size=size,output_file='UHS_TMP.fits')
+			query_wsa_fits(ra,de,size=size,output_file='UHS_TMP.fits.gz',filter='all',catalog='UHS')
 			
 	
 	#If no UKIDSS data could be downloaded, turn off the UKIDSS option
 	if len(glob.glob('*_UKIDSS_TMP.fits*')) == 0:
 		UKIDSS = False
 	
+	#Check if UKIDSS_J is there. If it is then skip UHS
+	if len(glob.glob('J_UKIDSS_TMP.fits*')) == 0:
+		UHS = False
+
 	#If no VHS data could be downloaded, turn off the VHS option
 	if len(glob.glob('*_VHS_TMP.fits*')) == 0:
 		VHS = False
@@ -617,11 +621,10 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
 		try:#J band
 			#Get date and then make plot
 			fitsfile = 'J_UHS_TMP.fits.gz'
-			#hdulist = pyfits.open(fitsfile)
-			#year = hdulist[0].header['UTDATE'][0:4]
-			#hdulist.close()
-			year = " "
-			oplotfits(fig,fitsfile,nyplot,nxplot,nxplot+2+ukidss_spacing*nxplot+dss_negspacing*nxplot,ra,de,'UHS J',year=year,ra2=ra2,de2=de2,north=True,hdu=1,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius,size=size,buffer=buffer,gnirsacq=gnirsacq,circle_alpha=circle_alpha,ra3=ra3,de3=de3,ra4=ra4,de4=de4,ra5=ra5,de5=de5)
+			hdulist = pyfits.open(fitsfile)
+			year = hdulist[0].header['UTDATE'][0:4]
+			hdulist.close()
+			oplotfits(fig,fitsfile,nyplot,nxplot,nxplot+1+ukidss_spacing*nxplot+dss_negspacing*nxplot,ra,de,'UHS J',year=year,ra2=ra2,de2=de2,north=True,hdu=1,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius,size=size,buffer=buffer,gnirsacq=gnirsacq,circle_alpha=circle_alpha,ra3=ra3,de3=de3,ra4=ra4,de4=de4,ra5=ra5,de5=de5)
 		except:
 			pass
 
