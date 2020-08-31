@@ -11,7 +11,6 @@ from PIL import Image
 from query_wsa_fits import *
 from query_pso_fits import *
 from query_des_fits import *
-from query_uhs_fits import *
 from jdcal import *
 import pdb
 import glob
