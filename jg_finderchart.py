@@ -460,7 +460,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
 			wmin4, wmax4, void = oplotfits(fig,'AllWISE_w4.fits',nyplot,nxplot,nxplot+4+allwise_spacing*nxplot+dss_negspacing*nxplot,ra,de,'W4',year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius,size=size,buffer=buffer,gnirsacq=gnirsacq,circle_alpha=circle_alpha,ra3=ra3,de3=de3,ra4=ra4,de4=de4,ra5=ra5,de5=de5)
 	
 	# Plot PSO images
-	if PSO:
+	if PSO and not DES:
 		try:#g band
 			#Get date and then make plot
 			fitsfile = 'g_PSO_TMP.fits'
@@ -518,7 +518,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
 			pass
 	
 	# Plot DES images
-	if (DES and not PSO):
+	if DES:
 		year = '2013-2016'
 		try:#g band
 			#Get date and then make plot
@@ -712,7 +712,8 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
 			pass
 	
 	#Create and plot RGB PSO image only if there's enough space (vertical_spacing >= 2)
-	if PSO and vertical_spacing >= 2:
+	#if PSO and vertical_spacing >= 2:
+	if PSO and not DES:
 		try:
 			files = ['y_PSO_TMP.fits','i_PSO_TMP.fits','g_PSO_TMP.fits']
 			aplpy.make_rgb_cube(files,'PSO_rgb.fits')
@@ -755,7 +756,8 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
 		except:
 			pass
 	
-	if DES and not PSO and vertical_spacing >= 2:
+	#if DES and not PSO and vertical_spacing >= 2:
+	if DES:
 		try:
 			files = ['Y_DES_TMP.fits','i_DES_TMP.fits','g_DES_TMP.fits']
 			aplpy.make_rgb_cube(files,'DES_rgb.fits')
