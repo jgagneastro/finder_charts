@@ -19,7 +19,7 @@ import astropy.io.fits as pyfits
 #import astropy.io.fits as aplpy
 stop=pdb.set_trace
 
-def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False,PSO=True,UKIDSS=True,VHS=True,DES=True,UHS=True,keepfiles=False,allcolor='#FFFF00',rejcolor='b',tm_color='r',plot=False,savepdf=True,secondary='',addtext='',addtext2='',skipdownloads=False,circle_radius=0.0025,size=1.667,override_directory=None,primarypos_label=None,secondarypos_label=None,title=None,filename=None,buffer=False,gnirsacq=False,DSS=True,TMASSIM=True,WISE=True,circle_alpha=.8,labels=True,pos_list_gray_ra=None,pos_list_gray_dec=None,pos_list_gray_sizes=None,pos_list_gray_pmra=None,pos_list_gray_pmdec=None,gray_label=None,pos3=None,pos3_label=None,pos4=None,pos4_label=None,pos5=None,pos5_label=None):
+def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False,PSO=True,UKIDSS=True,VHS=True,DES=True,UHS=True,keepfiles=False,allcolor='#FFFF00',rejcolor='b',tm_color='r',plot=False,savepdf=True,secondary='',addtext='',addtext2='',skipdownloads=False,circle_radius=0.0025,size=1.667,override_directory=None,primarypos_label=None,secondarypos_label=None,title=None,filename=None,buffer=False,gnirsacq=False,DSS=True,TMASSIM=True,WISE=True,circle_alpha=.8,labels=True,pos_list_gray_ra=None,pos_list_gray_dec=None,pos_list_gray_sizes=None,pos_list_gray_pmra=None,pos_list_gray_pmdec=None,gray_label=None,pos3=None,pos3_label=None,pos4=None,pos4_label=None,pos5=None,pos5_label=None,closefigs=None):
 	# Set $FINDER_PATH in your bash_profile if you would like to control where the finder charts are output
 	# size: arcmin
 	# allwise: overplot AllWISE catalog positions
@@ -31,6 +31,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
 	# tm_color = color of tmass symbols
 	# plot = show plot (otherwise, finder is just made)
 	# savepdf = save a pdf of the finder	
+	# closefigs = True or False to indicate whether to close the figures at the end. Default: True if savepdf=True, False otherwise.
 	
 	#Use buffer if needed
 	if buffer:
@@ -41,6 +42,13 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
 	#Import those after matplotlib is explicitly set as Agg in case Python is not installed as a Mac OS X framework
 	import pylab
 	import aplpy
+
+	#Adjust the default behavior of closefigs
+	if closefigs == None:
+		if savepdf is False:
+			closefigs = True
+		else:
+			closefigs = False
 
 	#Verify whether a working directory is set in the bash profile
 	main_dir = None
@@ -875,6 +883,10 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
 	if savepdf:
 		pylab.savefig(filename+'.pdf')
 	
+	#Close figures if needed
+	if closefigs:
+		pylab.close()
+
 	#Return to initial directory
 	if main_dir:
 		os.chdir(initial_dir)
