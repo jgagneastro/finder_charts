@@ -412,7 +412,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
 				#if rejtmass_sizes is not None:
 				#	rejtmass_sizes_sub = rejtmass_sizes[goodqual]
 
-			oplotfits(fig,'2MASS_H.fits',nyplot,nxplot,nxplot+2+tmass_spacing*nxplot+dss_negspacing*nxplot,ra,de,'2MASS $H$',year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius,rejtmass_ra=rejtmass_ra_sub,rejtmass_de=rejtmass_de_sub,rejtmass_sizes=rejtmass_sizes_sub,rejtmass_pmra=rejtmass_pmra_sub,rejtmass_pmde=rejtmass_pmde_sub,rejtmass_rel=rejtmass_rel_sub,gnirsacq=gnirsacq,circle_alpha=circle_alpha,ra3=ra3,de3=de3,ra4=ra4,de4=de4,ra5=ra5,de5=de5)
+			oplotfits(fig,'2MASS_H.fits',nyplot,nxplot,nxplot+2+tmass_spacing*nxplot+dss_negspacing*nxplot,ra,de,'2MASS $H$',size=size,year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius,rejtmass_ra=rejtmass_ra_sub,rejtmass_de=rejtmass_de_sub,rejtmass_sizes=rejtmass_sizes_sub,rejtmass_pmra=rejtmass_pmra_sub,rejtmass_pmde=rejtmass_pmde_sub,rejtmass_rel=rejtmass_rel_sub,gnirsacq=gnirsacq,circle_alpha=circle_alpha,ra3=ra3,de3=de3,ra4=ra4,de4=de4,ra5=ra5,de5=de5)
 		
 		if images[i][1] == 'K' and TMASSIM:
 			
@@ -426,7 +426,7 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
 				#if rejtmass_sizes is not None:
 				#	rejtmass_sizes_sub = rejtmass_sizes[goodqual]
 
-			void1, void2, im = oplotfits(fig,'2MASS_K.fits',nyplot,nxplot,nxplot+3+tmass_spacing*nxplot+dss_negspacing*nxplot,ra,de,'2MASS $K_S$',year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius,rejtmass_ra=rejtmass_ra_sub,rejtmass_de=rejtmass_de_sub,rejtmass_sizes=rejtmass_sizes_sub,rejtmass_pmra=rejtmass_pmra_sub,rejtmass_pmde=rejtmass_pmde_sub,rejtmass_rel=rejtmass_rel_sub,gnirsacq=gnirsacq,circle_alpha=circle_alpha,ra3=ra3,de3=de3,ra4=ra4,de4=de4,ra5=ra5,de5=de5)
+			void1, void2, im = oplotfits(fig,'2MASS_K.fits',nyplot,nxplot,nxplot+3+tmass_spacing*nxplot+dss_negspacing*nxplot,ra,de,'2MASS $K_S$',size=size,year=images[i][2][0:4],ra2=ra2,de2=de2,north=False,hdu=0,allwise=allwise,rejallwise=rejallwise,tmass=tmass,allcolor=allcolor,rejcolor=rejcolor,tm_color=tm_color,secondary=secondary,allwise_ra=allwise_ra,allwise_de=allwise_de,rejallwise_ra=rejallwise_ra,rejallwise_de=rejallwise_de,tmass_ra=tmass_ra,tmass_de=tmass_de,circle_radius=circle_radius,rejtmass_ra=rejtmass_ra_sub,rejtmass_de=rejtmass_de_sub,rejtmass_sizes=rejtmass_sizes_sub,rejtmass_pmra=rejtmass_pmra_sub,rejtmass_pmde=rejtmass_pmde_sub,rejtmass_rel=rejtmass_rel_sub,gnirsacq=gnirsacq,circle_alpha=circle_alpha,ra3=ra3,de3=de3,ra4=ra4,de4=de4,ra5=ra5,de5=de5)
 			
 			if not labels:
 				xlabels = .95
