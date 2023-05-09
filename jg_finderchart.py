@@ -15,9 +15,8 @@ from jdcal import *
 import pdb
 import glob
 import astropy.io.fits as pyfits
-
-#import astropy.io.fits as aplpy
-stop=pdb.set_trace
+import pylab, aplpy
+#stop=pdb.set_trace
 
 def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False,PSO=True,UKIDSS=True,VHS=True,DES=True,UHS=True,keepfiles=False,allcolor='#FFFF00',rejcolor='b',tm_color='r',plot=False,savepdf=True,secondary='',addtext='',addtext2='',skipdownloads=False,circle_radius=0.0025,size=1.667,override_directory=None,primarypos_label=None,secondarypos_label=None,title=None,filename=None,buffer=False,gnirsacq=False,DSS=True,TMASSIM=True,WISE=True,circle_alpha=.8,labels=True,pos_list_gray_ra=None,pos_list_gray_dec=None,pos_list_gray_sizes=None,pos_list_gray_pmra=None,pos_list_gray_pmdec=None,gray_label=None,pos3=None,pos3_label=None,pos4=None,pos4_label=None,pos5=None,pos5_label=None,closefigs=None):
 	# Set $FINDER_PATH in your bash_profile if you would like to control where the finder charts are output
@@ -119,7 +118,8 @@ def finder(source_name,allwise=False,rejallwise=False,tmass=False,rejtmass=False
 	
 	images = []
 	for image in root.iter('image'):
-		for child in image.getchildren():
+		#for child in image.getchildren():
+		for child in image:
 			if child.tag == 'surveyname':
 				surveyname = child.text
 			if child.tag == 'band':
@@ -902,7 +902,7 @@ def oplotfits(fig,fitsfile,nyplot,nxplot,position,ra,de,label,year='',xlabel=0.0
 	if buffer:
 		import matplotlib
 		matplotlib.use('Agg')
-	import pylab,pyfits,aplpy
+	import pylab,aplpy
 	
 	#Circle parameters
 	circle_width = 1.2
